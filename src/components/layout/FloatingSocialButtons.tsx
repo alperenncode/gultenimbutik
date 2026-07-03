@@ -45,11 +45,18 @@ export function FloatingSocialButtons() {
         >
           @{SITE.instagramHandle}
         </span>
-        <span
-          className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full
-            bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white shadow-card"
-        >
-          <Instagram size={22} strokeWidth={1.8} />
+        <span className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center">
+          {/* Nabız halkası — WhatsApp ile senkron olmasın diye gecikmeli */}
+          <span
+            className="absolute inset-0 rounded-full bg-[#DD2A7B] animate-pulse-ring"
+            style={{ animationDelay: "0.9s" }}
+          />
+          <span
+            className="relative flex h-full w-full items-center justify-center rounded-full
+              bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white shadow-card"
+          >
+            <Instagram size={22} strokeWidth={1.8} />
+          </span>
         </span>
       </motion.a>
 

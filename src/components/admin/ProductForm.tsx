@@ -60,6 +60,7 @@ export function ProductForm({ product }: { product?: Product }) {
     const category = categories.find((c) => c.id === categoryId);
     if (!category) return setError("Lütfen bir kategori seçin.");
     if (!name.trim()) return setError("Ürün adı boş olamaz.");
+    if (!brand.trim()) return setError("Marka boş olamaz.");
     if (!price || Number(price) <= 0) return setError("Geçerli bir fiyat girin.");
     if (images.length === 0) return setError("En az bir görsel yükleyin.");
 
@@ -136,11 +137,19 @@ export function ProductForm({ product }: { product?: Product }) {
 
         <div>
           <label className="input-label">Marka *</label>
-          <select value={brand} onChange={(e) => setBrand(e.target.value)} className="input-field">
+          {/* Serbest giriş: mevcut markalar öneri olarak listelenir, yeni marka yazılabilir */}
+          <input
+            list="marka-onerileri"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            className="input-field"
+            placeholder="Marka yazın veya listeden seçin"
+          />
+          <datalist id="marka-onerileri">
             {SITE.brands.map((b) => (
-              <option key={b} value={b}>{b}</option>
+              <option key={b} value={b} />
             ))}
-          </select>
+          </datalist>
         </div>
 
         <div>

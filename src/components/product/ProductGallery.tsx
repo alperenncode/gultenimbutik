@@ -2,14 +2,15 @@
 
 /**
  * Ürün görsel galerisi.
- * - Masaüstü: imleç konumuna göre yakınlaşan hover-zoom (büyüteç etkisi)
- * - Mobil: dokunuşla zoom aç/kapa
- * - Thumbnail rayı: seçili görsele rose gold çerçeve, crossfade geçiş
+ * - Zoom yalnızca TIKLAYINCA açılır (hover'da istemsiz büyüme yok);
+ *   açıkken imleç/parmak konumuna göre gezinilir, tekrar tıklayınca kapanır.
+ * - Masaüstü + mobil aynı davranış; Esc ile de kapanır.
+ * - Thumbnail rayı: seçili görsele rose gold çerçeve, crossfade geçiş.
  */
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ZoomIn } from "lucide-react";
+import { ZoomIn, ZoomOut } from "lucide-react";
 
 export function ProductGallery({ images, name }: { images: string[]; name: string }) {
   const [active, setActive] = useState(0);
@@ -17,12 +18,20 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
   const [origin, setOrigin] = useState("50% 50%");
   const frameRef = useRef<HTMLDivElement>(null);
 
-  const onMouseMove = useCallback((e: React.MouseEvent) => {
+  const updateOrigin = useCallback((clientX: number, clientY: number) => {
     const rect = frameRef.current?.getBoundingClientRect();
     if (!rect) return;
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const x = Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
+    const y = Math.min(100, Math.max(0, ((clientY - rect.top) / rect.height) * 100));
     setOrigin(`${x}% ${y}%`);
+  }, []);
+
+  // Görsel değişince zoom'u kapat; Esc ile kapatma
+  useEffect(() => setZoomed(false), [active]);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setZoomed(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   if (images.length === 0) {
@@ -35,15 +44,27 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Ana görsel */}
+      {/* Ana görsel — tıklayınca zoom açılır/kapanır */}
       <div
         ref={frameRef}
-        className={`relative aspect-[3/4] overflow-hidden bg-cream-dark shadow-soft
+        role="button"
+        tabIndex={0}
+        aria-label={zoomed ? "Yakınlaştırmayı kapat" : "Görseli yakınlaştır"}
+        className={`relative aspect-[3/4] select-none overflow-hidden bg-cream-dark shadow-soft
           ${zoomed ? "cursor-zoom-out" : "cursor-zoom-in"}`}
-        onMouseMove={onMouseMove}
-        onMouseEnter={() => setZoomed(true)}
-        onMouseLeave={() => setZoomed(false)}
-        onClick={() => setZoomed((v) => !v)}
+        onClick={(e) => {
+          if (!zoomed) updateOrigin(e.clientX, e.clientY);
+          setZoomed((v) => !v);
+        }}
+        onMouseMove={(e) => zoomed && updateOrigin(e.clientX, e.clientY)}
+        onTouchMove={(e) => {
+          if (zoomed && e.touches[0]) {
+            updateOrigin(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") setZoomed((v) => !v);
+        }}
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -59,20 +80,31 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
               alt={`${name} — görsel ${active + 1}`}
               fill
               priority={active === 0}
+              quality={95}
               sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-200"
+              className="object-cover transition-transform duration-300 ease-out"
               style={{
                 transformOrigin: origin,
-                transform: zoomed ? "scale(1.8)" : "scale(1)",
+                transform: zoomed ? "scale(1.6)" : "scale(1)",
               }}
+              draggable={false}
             />
           </motion.div>
         </AnimatePresence>
 
+        {/* Zoom durumu göstergesi */}
+        <span
+          className="pointer-events-none absolute bottom-4 right-4 flex h-9 w-9 items-center
+            justify-center rounded-full bg-white/85 text-bordeaux/70 shadow-soft"
+        >
+          {zoomed ? <ZoomOut size={16} /> : <ZoomIn size={16} />}
+        </span>
         {!zoomed && (
-          <span className="pointer-events-none absolute bottom-4 right-4 flex h-9 w-9
-            items-center justify-center rounded-full bg-white/85 text-bordeaux/70 shadow-soft">
-            <ZoomIn size={16} />
+          <span
+            className="pointer-events-none absolute bottom-4 left-4 rounded-full bg-white/85
+              px-3 py-1.5 text-[10px] uppercase tracking-wider text-bordeaux/60 shadow-soft"
+          >
+            Yakınlaştırmak için tıklayın
           </span>
         )}
       </div>
@@ -92,7 +124,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
                     : "opacity-60 hover:opacity-100"
                 }`}
             >
-              <Image src={img} alt="" fill sizes="80px" className="object-cover" />
+              <Image src={img} alt="" fill sizes="80px" quality={80} className="object-cover" />
             </button>
           ))}
         </div>

@@ -25,7 +25,16 @@
       "PowerShell(node \"C:\\\\Users\\\\alper\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--websiteler-g-ltenim-butik2\\\\b1f93240-e938-47fd-8f0e-b4dbbfb395e7\\\\scratchpad\\\\check-price.mjs\")",
       "PowerShell(node scripts/fix-prices.mjs)",
       "PowerShell(node scripts/seed.mjs)",
-      "PowerShell(git commit -m \"Admin panel giris dongusu duzeltildi: yetki kontrolu bitmeden yonlendirme yapilmiyor\")"
+      "PowerShell(git commit -m \"Admin panel giris dongusu duzeltildi: yetki kontrolu bitmeden yonlendirme yapilmiyor\")",
+      "PowerShell(node scripts/make-test-admin.mjs create)",
+      "PowerShell(node \"C:\\\\Users\\\\alper\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--websiteler-g-ltenim-butik2\\\\b1f93240-e938-47fd-8f0e-b4dbbfb395e7\\\\scratchpad\\\\test-prod-upload.mjs\")",
+      "PowerShell(npm install --save-dev sharp --no-audit --no-fund)",
+      "PowerShell(node scripts/make-icons.mjs)",
+      "PowerShell(node \"C:\\\\Users\\\\alper\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--websiteler-g-ltenim-butik2\\\\b1f93240-e938-47fd-8f0e-b4dbbfb395e7\\\\scratchpad\\\\cleanup-tests.mjs\")",
+      "PowerShell(node scripts/make-test-admin.mjs delete)",
+      "PowerShell(Copy-Item \"C:\\\\Users\\\\alper\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--websiteler-g-ltenim-butik2\\\\b1f93240-e938-47fd-8f0e-b4dbbfb395e7\\\\scratchpad\\\\cleanup-tests.mjs\" \"scripts\\\\_cleanup-tests.mjs\")",
+      "PowerShell(node scripts/_cleanup-tests.mjs)",
+      "PowerShell(Remove-Item \"scripts\\\\_cleanup-tests.mjs\" -Confirm:$false)"
     ]
   }
 }

@@ -58,6 +58,12 @@ export function ProductsBrowser({ categories }: { categories: Category[] }) {
     [products]
   );
 
+  // Marka listesi üründen türetilir (admin yeni marka eklerse filtre otomatik güncellenir)
+  const allBrands = useMemo(() => {
+    const fromProducts = [...new Set(products.map((p) => p.brand).filter(Boolean))];
+    return fromProducts.length > 0 ? fromProducts : [...SITE.brands];
+  }, [products]);
+
   const filtered = useMemo(() => {
     let list = products;
     if (category) list = list.filter((p) => p.categorySlug === category);
@@ -132,7 +138,7 @@ export function ProductsBrowser({ categories }: { categories: Category[] }) {
       <div>
         <p className="input-label">Marka</p>
         <div className="flex flex-wrap gap-2">
-          {SITE.brands.map((b) => (
+          {allBrands.map((b) => (
             <button
               key={b}
               onClick={() => setBrand(brand === b ? "" : b)}

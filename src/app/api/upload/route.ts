@@ -26,7 +26,35 @@ async function assertAdmin(idToken: string | undefined | null): Promise<string> 
   return email;
 }
 
+/** Ortam değişkeni eksikse kullanıcıya net Türkçe açıklama döndür */
+function envError(): NextResponse | null {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json(
+      {
+        error:
+          "Görsel deposu projeye bağlı değil: Vercel → Storage → Blob store → " +
+          "'Connect Project' ile gultenimbutik projesine bağlayın, sonra Redeploy yapın.",
+      },
+      { status: 500 }
+    );
+  }
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+    return NextResponse.json(
+      {
+        error:
+          "Sunucuda FIREBASE_SERVICE_ACCOUNT_KEY tanımlı değil: Vercel → Settings → " +
+          "Environment Variables bölümünden ekleyin, sonra Redeploy yapın.",
+      },
+      { status: 500 }
+    );
+  }
+  return null;
+}
+
 export async function POST(request: Request): Promise<NextResponse> {
+  const missing = envError();
+  if (missing) return missing;
+
   const body = (await request.json()) as HandleUploadBody;
 
   try {
@@ -56,6 +84,9 @@ export async function POST(request: Request): Promise<NextResponse> {
 
 /** Görsel silme — yalnızca admin, yalnızca Blob URL'leri */
 export async function DELETE(request: Request): Promise<NextResponse> {
+  const missing = envError();
+  if (missing) return missing;
+
   try {
     const idToken = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
     await assertAdmin(idToken);

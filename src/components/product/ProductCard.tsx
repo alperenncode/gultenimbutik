@@ -33,6 +33,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
                 alt={product.name}
                 fill
                 priority={priority}
+                quality={85}
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className={`object-cover transition-all duration-700 ${
                   secondary ? "group-hover:opacity-0" : "group-hover:scale-105"
@@ -43,6 +44,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
                   src={secondary}
                   alt={`${product.name} — alternatif görünüm`}
                   fill
+                  quality={85}
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   className="object-cover opacity-0 scale-105 transition-all duration-700
                     group-hover:opacity-100 group-hover:scale-100"
@@ -92,8 +94,9 @@ export function ProductCard({ product, priority = false }: { product: Product; p
       {/* Bilgiler */}
       <Link href={`/urun/${product.slug}`} className="block pt-4 pb-2 text-center">
         <p className="text-[10px] uppercase tracking-luxe text-rosegold-dark">{product.brand}</p>
+        {/* Sabit yükseklik: isimler 1-2 satır olsa da fiyatlar aynı hizada kalır */}
         <h3 className="mt-1.5 font-display text-[15px] leading-snug text-bordeaux
-          transition-colors group-hover:text-rosegold-dark line-clamp-2">
+          transition-colors group-hover:text-rosegold-dark line-clamp-2 min-h-[2.6em]">
           {product.name}
         </h3>
         <div className="mt-2 flex items-center justify-center gap-2 text-sm">

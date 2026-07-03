@@ -108,6 +108,7 @@ export function Hero({ imageUrl }: { imageUrl?: string }) {
                   alt="Gültenim Butik yeni sezon"
                   fill
                   priority
+                  quality={90}
                   sizes="(max-width: 1024px) 0px, 448px"
                   className="object-cover"
                 />

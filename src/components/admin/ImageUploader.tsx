@@ -53,11 +53,13 @@ export function ImageUploader({
           );
           setUploading((prev) => prev.filter((u) => u.id !== id));
           onChange([...imagesRef.current, url]);
-        } catch {
+        } catch (err) {
+          // Sunucudan gelen gerçek hata mesajını göster (JSON gövdesi varsa ayıkla)
+          let message = err instanceof Error ? err.message : "Yüklenemedi";
+          const jsonMatch = message.match(/\{"error":"([^"]+)"\}/);
+          if (jsonMatch) message = jsonMatch[1];
           setUploading((prev) =>
-            prev.map((u) =>
-              u.id === id ? { ...u, error: "Yüklenemedi — yetkinizi kontrol edin" } : u
-            )
+            prev.map((u) => (u.id === id ? { ...u, error: message } : u))
           );
         }
       })
