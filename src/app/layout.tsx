@@ -56,6 +56,10 @@ export const viewport: Viewport = {
   themeColor: "#2C1A1A",
   width: "device-width",
   initialScale: 1,
+  // Sayfanın parmakla küçültülüp "yarım" kalmasını önler —
+  // görsel büyütme ihtiyacı galeri içindeki tam ekran görüntüleyiciyle karşılanır
+  maximumScale: 1,
+  userScalable: false,
   // iOS çentik/home çubuğu güvenli alanları (env(safe-area-inset-*)) için gerekli
   viewportFit: "cover",
 };

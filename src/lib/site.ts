@@ -5,13 +5,13 @@ export const SITE = {
   name: "Gültenim Butik",
   tagline: "Zarafetin Adresi",
   description:
-    "Gültenim Butik — Selvi Çetin ve İnvee koleksiyonlarıyla premium tesettür giyim. Elbise, takım, tunik, dış giyim ve triko modelleri. Sipariş için WhatsApp: 0534 070 07 80",
+    "Gültenim Butik — Selvi Çetin ve İnvee koleksiyonlarıyla premium tesettür giyim. Elbise, takım, tunik, dış giyim ve triko modelleri. Sipariş için WhatsApp: 0533 285 36 39",
   url: "https://www.gultenimbutik.com.tr",
 
   /** WhatsApp sipariş hattı — uluslararası formatta, wa.me linklerinde kullanılır */
-  whatsappNumber: "905340700780",
+  whatsappNumber: "905332853639",
   /** Görüntülenen telefon formatı */
-  phoneDisplay: "0534 070 07 80",
+  phoneDisplay: "0533 285 36 39",
 
   instagramHandle: "gultenim_boutique",
   instagramUrl: "https://www.instagram.com/gultenim_boutique",
