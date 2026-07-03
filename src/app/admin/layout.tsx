@@ -5,7 +5,7 @@
  * AdminGuard: giriş yapmamış veya admin olmayan herkesi /admin/login'e yollar.
  * Gerçek güvenlik Firestore/Storage kurallarındadır; bu guard yalnızca arayüz katmanıdır.
  */
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -34,21 +34,22 @@ function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const isLoginPage = pathname === "/admin/login";
+  const denied = !loading && (!user || !isAdmin);
+
+  // Yönlendirme render sırasında değil, effect içinde yapılır (titreme önlenir)
+  useEffect(() => {
+    if (!isLoginPage && denied) router.replace("/admin/login");
+  }, [isLoginPage, denied, router]);
 
   // Login sayfası guard'sız gösterilir
   if (isLoginPage) return <>{children}</>;
 
-  if (loading) {
+  if (loading || denied) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-cream">
         <Loader2 size={30} className="animate-spin text-rosegold-dark" />
       </div>
     );
-  }
-
-  if (!user || !isAdmin) {
-    router.replace("/admin/login");
-    return null;
   }
 
   return (

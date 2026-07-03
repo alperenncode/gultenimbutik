@@ -60,6 +60,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
+      // Profil ve admin kontrolü bitene kadar "yükleniyor" kalmalı —
+      // yoksa AdminGuard, yetki henüz doğrulanmadan kullanıcıyı login'e geri atar
+      setLoading(true);
       setUser(u);
       if (u) {
         try {

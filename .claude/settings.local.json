@@ -18,7 +18,14 @@
       "PowerShell(Rename-Item \"gultenimbutik-firebase-adminsdk-fbsvc-77da341748.json\" \"serviceAccountKey.json\"; $json = Get-Content \"serviceAccountKey.json\" -Raw; $obj = $json | ConvertFrom-Json; Write-Host \"Proje: $\\($obj.project_id\\) / Hesap: $\\($obj.client_email\\)\"; $b64 = [Convert]::ToBase64String\\([Text.Encoding]::UTF8.GetBytes\\($json\\)\\); Set-Content -Path \".env.local\" -Value \"FIREBASE_SERVICE_ACCOUNT_KEY=$b64\" -Encoding ascii; Write-Host \".env.local yazildi \\($\\($b64.Length\\) karakter\\)\"; git check-ignore serviceAccountKey.json .env.local)",
       "PowerShell(node scripts/deploy-rules.mjs)",
       "PowerShell(node scripts/add-admin.mjs alperenucm@gmail.com)",
-      "PowerShell($env_content = Get-Content \".env.local\" -Raw; $value = \\($env_content -split \"=\", 2\\)[1].Trim\\(\\); Set-Content -Path \"VERCEL-ANAHTAR.txt\" -Value $value -Encoding ascii; Add-Content -Path \".gitignore\" -Value \"VERCEL-ANAHTAR.txt\" -Encoding ascii; git check-ignore VERCEL-ANAHTAR.txt; Write-Host \"OK - dosya hazir ve git'e girmeyecek\")"
+      "PowerShell($env_content = Get-Content \".env.local\" -Raw; $value = \\($env_content -split \"=\", 2\\)[1].Trim\\(\\); Set-Content -Path \"VERCEL-ANAHTAR.txt\" -Value $value -Encoding ascii; Add-Content -Path \".gitignore\" -Value \"VERCEL-ANAHTAR.txt\" -Encoding ascii; git check-ignore VERCEL-ANAHTAR.txt; Write-Host \"OK - dosya hazir ve git'e girmeyecek\")",
+      "PowerShell(git commit --allow-empty -m \"Vercel yeniden dagitim: FIREBASE_SERVICE_ACCOUNT_KEY etkinlestirme\")",
+      "PowerShell(Add-Content -Path \".env.local\" -Value \"BLOB_READ_WRITE_TOKEN=vercel_blob_rw_R7Of10VPlnDaAAt1_IYn9K9gy1ENaFUwYJHeQ9gETHGvTvI\" -Encoding ascii; Write-Host \"token kaydedildi\"; $p = Get-Content \"seed-data\\\\products.json\" -Raw | ConvertFrom-Json; Write-Host \"Toplam urun: $\\($p.Count\\) / Fiyatsiz \\(atlanacak\\): $\\(\\($p | Where-Object { -not $_.price -or $_.price -le 0 }\\).Count\\)\")",
+      "PowerShell(node -e \"const m=require\\('./downloaded-images/manifest.json'\\); fetch\\(m.products[0].url,{headers:{'User-Agent':'Mozilla/5.0'}}\\).then\\(r=>r.text\\(\\)\\).then\\(h=>{const lines=h.split\\('\\\\n'\\).filter\\(l=>/price|TL|?/i.test\\(l\\)\\).slice\\(0,25\\); console.log\\(m.products[0].url\\); console.log\\(lines.join\\('\\\\n'\\).slice\\(0,3000\\)\\);}\\)\")",
+      "PowerShell(node \"C:\\\\Users\\\\alper\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--websiteler-g-ltenim-butik2\\\\b1f93240-e938-47fd-8f0e-b4dbbfb395e7\\\\scratchpad\\\\check-price.mjs\")",
+      "PowerShell(node scripts/fix-prices.mjs)",
+      "PowerShell(node scripts/seed.mjs)",
+      "PowerShell(git commit -m \"Admin panel giris dongusu duzeltildi: yetki kontrolu bitmeden yonlendirme yapilmiyor\")"
     ]
   }
 }
