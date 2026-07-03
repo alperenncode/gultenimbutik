@@ -14,21 +14,23 @@
  *     Kategorileri, ürünleri (görselleri Storage'a yükleyerek), varsa
  *     yorum ve lookbook verilerini Firestore'a yazar. Var olan slug'ları
  *     atlar — script defalarca güvenle çalıştırılabilir.
+ *     Görseller Vercel Blob'a yüklenir (Firebase Storage/Blaze gerekmez).
  *
- * Gereksinim: .env.local içinde FIREBASE_SERVICE_ACCOUNT_KEY (bkz. .env.example)
+ * Gereksinim: .env.local içinde FIREBASE_SERVICE_ACCOUNT_KEY ve
+ * BLOB_READ_WRITE_TOKEN (bkz. .env.example)
  */
 import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { initializeApp, cert } from "firebase-admin/app";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
-import { getStorage } from "firebase-admin/storage";
+import { put } from "@vercel/blob";
 
 const ROOT = process.cwd();
 const SEED_DIR = path.join(ROOT, "seed-data");
 const IMAGES_DIR = path.join(ROOT, "downloaded-images");
-const BUCKET = "gultenimbutik.firebasestorage.app";
+
+const CONTENT_TYPES = { ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp" };
 
 // ── .env.local'dan service account anahtarını oku (harici bağımlılık yok) ──
 async function loadEnv() {
@@ -132,19 +134,24 @@ async function seed() {
     console.error("FIREBASE_SERVICE_ACCOUNT_KEY bulunamadı. .env.example'daki adımları izleyin.");
     process.exit(1);
   }
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    console.error("BLOB_READ_WRITE_TOKEN bulunamadı. Vercel → Storage → Blob store →");
+    console.error("'.env.local' sekmesindeki token'ı .env.local dosyanıza ekleyin.");
+    process.exit(1);
+  }
   const json = raw.trim().startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8");
-  initializeApp({ credential: cert(JSON.parse(json)), storageBucket: BUCKET });
+  initializeApp({ credential: cert(JSON.parse(json)) });
   const db = getFirestore();
-  const bucket = getStorage().bucket();
 
-  /** Yerel dosyayı Storage'a yükler, kalıcı indirme URL'si döndürür */
+  /** Yerel dosyayı Vercel Blob'a yükler, kalıcı URL döndürür */
   async function uploadFile(localPath, destPath) {
-    const token = crypto.randomUUID();
-    await bucket.upload(localPath, {
-      destination: destPath,
-      metadata: { metadata: { firebaseStorageDownloadTokens: token } },
+    const ext = path.extname(localPath).toLowerCase();
+    const blob = await put(destPath, await readFile(localPath), {
+      access: "public",
+      contentType: CONTENT_TYPES[ext] ?? "image/jpeg",
+      addRandomSuffix: true,
     });
-    return `https://firebasestorage.googleapis.com/v0/b/${BUCKET}/o/${encodeURIComponent(destPath)}?alt=media&token=${token}`;
+    return blob.url;
   }
 
   // Kategoriler

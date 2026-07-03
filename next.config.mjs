@@ -2,7 +2,9 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      // Firebase Storage görselleri
+      // Vercel Blob görselleri (ürün/kategori/lookbook)
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      // Firebase Storage (ileride kullanılırsa)
       { protocol: "https", hostname: "firebasestorage.googleapis.com" },
       // Mevcut siteden geçiş döneminde kullanılabilecek görseller
       { protocol: "https", hostname: "www.gultenimbutik.com.tr" },

@@ -1,48 +1,55 @@
 /**
- * Firebase Storage yükleme yardımcıları (client).
- * uploadBytesResumable ile ilerleme yüzdesi raporlanır; dosya adı çakışmasın
- * diye zaman damgası + rastgele ek kullanılır.
+ * Görsel yükleme yardımcıları — Vercel Blob (client tarafı).
+ *
+ * Yükleme, /api/upload rotası üzerinden yetkilendirilir: tarayıcı Firebase
+ * ID token'ını gönderir, sunucu admin olduğunu doğrulayıp tek kullanımlık
+ * yükleme izni üretir. İlerleme yüzdesi raporlanır.
+ *
+ * Not: Firebase Storage yerine Vercel Blob kullanılır (Blaze planı gerekmez).
  */
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
-import { storage } from "@/lib/firebase-client";
+import { upload } from "@vercel/blob/client";
+import { auth } from "@/lib/firebase-client";
 
-export function uploadImage(
+async function getIdToken(): Promise<string> {
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) throw new Error("Oturum bulunamadı — yeniden giriş yapın.");
+  return token;
+}
+
+export async function uploadImage(
   file: File,
   folder: string,
   onProgress?: (percent: number) => void
 ): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeName}`;
-    const task = uploadBytesResumable(ref(storage, path), file, {
-      contentType: file.type,
-    });
+  const idToken = await getIdToken();
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-    task.on(
-      "state_changed",
-      (snap) => onProgress?.(Math.round((snap.bytesTransferred / snap.totalBytes) * 100)),
-      reject,
-      async () => {
-        try {
-          resolve(await getDownloadURL(task.snapshot.ref));
-        } catch (err) {
-          reject(err);
-        }
-      }
-    );
+  const blob = await upload(`${folder}/${safeName}`, file, {
+    access: "public",
+    handleUploadUrl: "/api/upload",
+    clientPayload: idToken,
+    onUploadProgress: ({ percentage }) => onProgress?.(Math.round(percentage)),
   });
+
+  return blob.url;
 }
 
-/** İndirme URL'sinden Storage dosyasını siler (dosya zaten yoksa sessizce geçer). */
+/** İndirme URL'sinden Blob dosyasını siler (dosya zaten yoksa sessizce geçer). */
 export async function deleteImageByUrl(url: string): Promise<void> {
-  try {
-    await deleteObject(ref(storage, url));
-  } catch (err: unknown) {
-    if ((err as { code?: string })?.code !== "storage/object-not-found") throw err;
+  // Blob dışı adresler (ör. eski site görselleri) sessizce atlanır
+  if (!url.includes(".blob.vercel-storage.com/")) return;
+
+  const idToken = await getIdToken();
+  const res = await fetch("/api/upload", {
+    method: "DELETE",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify({ url }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.error ?? "Görsel silinemedi");
   }
 }

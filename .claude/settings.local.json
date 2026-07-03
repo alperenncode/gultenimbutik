@@ -8,7 +8,12 @@
       "WebFetch(domain:www.gultenimbutik.com.tr)",
       "PowerShell(node scripts/download-images.mjs)",
       "PowerShell(npm run build)",
-      "PowerShell(node scripts/seed.mjs init)"
+      "PowerShell(node scripts/seed.mjs init)",
+      "PowerShell(npm install @vercel/blob --no-audit --no-fund)",
+      "PowerShell(Remove-Item \"storage.rules\" -Confirm:$false)",
+      "PowerShell(npm run build 2>&1)",
+      "PowerShell(git add -A)",
+      "PowerShell(git push origin main)"
     ]
   }
 }

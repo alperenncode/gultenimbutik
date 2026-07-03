@@ -12,6 +12,7 @@
 import "server-only";
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
+import { getAuth, type Auth } from "firebase-admin/auth";
 
 function getAdminApp(): App {
   if (getApps().length) return getApps()[0];
@@ -35,4 +36,9 @@ function getAdminApp(): App {
 
 export function getAdminDb(): Firestore {
   return getFirestore(getAdminApp());
+}
+
+/** Görsel yükleme API'sinde admin doğrulaması için (ID token kontrolü) */
+export function getAdminAuth(): Auth {
+  return getAuth(getAdminApp());
 }

@@ -12,6 +12,7 @@
     "seed": "node scripts/seed.mjs"
   },
   "dependencies": {
+    "@vercel/blob": "^2.5.0",
     "firebase": "^10.14.1",
     "firebase-admin": "^12.7.0",
     "framer-motion": "^11.11.17",
