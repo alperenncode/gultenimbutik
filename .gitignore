@@ -30,3 +30,4 @@ next-env.d.ts
 
 # indirilen ham görseller (büyük dosyalar, repo dışı)
 /downloaded-images/
+VERCEL-ANAHTAR.txt

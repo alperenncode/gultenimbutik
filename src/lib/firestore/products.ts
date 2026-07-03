@@ -44,15 +44,12 @@ function mapProduct(d: DocumentSnapshot | QueryDocumentSnapshot): Product {
   };
 }
 
-/** Vitrindeki tüm aktif ürünler — /urunler sayfası tek seferde çeker, filtre client-side */
+/** Vitrindeki tüm aktif ürünler — /urunler sayfası tek seferde çeker, filtre client-side.
+ *  Sıralama bellekte yapılır (composite index gerekmesin diye). */
 export async function fetchActiveProducts(): Promise<Product[]> {
-  const q = query(
-    collection(db, "products"),
-    where("isActive", "==", true),
-    orderBy("createdAt", "desc")
-  );
+  const q = query(collection(db, "products"), where("isActive", "==", true));
   const snap = await getDocs(q);
-  return snap.docs.map(mapProduct);
+  return snap.docs.map(mapProduct).sort((a, b) => b.createdAt - a.createdAt);
 }
 
 /** Admin: aktif+pasif tüm ürünler */

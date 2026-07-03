@@ -68,6 +68,14 @@ export async function getCategories(): Promise<Category[]> {
   }, "categories");
 }
 
+// Not: Sorgularda yalnızca eşitlik filtreleri kullanılır (composite index
+// gerektirmez); sıralama bellekte yapılır. Bu katalog ölçeğinde (yüzlerce ürün)
+// en sade ve bakım gerektirmeyen yaklaşım budur.
+
+function sortByNewest(products: Product[]): Product[] {
+  return products.sort((a, b) => b.createdAt - a.createdAt);
+}
+
 export async function getNewProducts(count = 8): Promise<Product[]> {
   return safeQuery(async () => {
     const db = await getDb();
@@ -75,10 +83,8 @@ export async function getNewProducts(count = 8): Promise<Product[]> {
       .collection("products")
       .where("isActive", "==", true)
       .where("isNew", "==", true)
-      .orderBy("createdAt", "desc")
-      .limit(count)
       .get();
-    return snap.docs.map(mapProduct);
+    return sortByNewest(snap.docs.map(mapProduct)).slice(0, count);
   }, "yeni ürünler");
 }
 
@@ -89,22 +95,16 @@ export async function getPopularProducts(count = 8): Promise<Product[]> {
       .collection("products")
       .where("isActive", "==", true)
       .where("isPopular", "==", true)
-      .orderBy("createdAt", "desc")
-      .limit(count)
       .get();
-    return snap.docs.map(mapProduct);
+    return sortByNewest(snap.docs.map(mapProduct)).slice(0, count);
   }, "popüler ürünler");
 }
 
 export async function getAllActiveProducts(): Promise<Product[]> {
   return safeQuery(async () => {
     const db = await getDb();
-    const snap = await db
-      .collection("products")
-      .where("isActive", "==", true)
-      .orderBy("createdAt", "desc")
-      .get();
-    return snap.docs.map(mapProduct);
+    const snap = await db.collection("products").where("isActive", "==", true).get();
+    return sortByNewest(snap.docs.map(mapProduct));
   }, "tüm ürünler");
 }
 
@@ -115,9 +115,8 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
       .collection("products")
       .where("categorySlug", "==", categorySlug)
       .where("isActive", "==", true)
-      .orderBy("createdAt", "desc")
       .get();
-    return snap.docs.map(mapProduct);
+    return sortByNewest(snap.docs.map(mapProduct));
   }, `kategori:${categorySlug}`);
 }
 
@@ -156,23 +155,19 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
 export async function getTestimonials(): Promise<Testimonial[]> {
   return safeQuery(async () => {
     const db = await getDb();
-    const snap = await db
-      .collection("testimonials")
-      .where("isActive", "==", true)
-      .orderBy("order", "asc")
-      .get();
-    return snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Testimonial);
+    const snap = await db.collection("testimonials").where("isActive", "==", true).get();
+    return snap.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }) as Testimonial)
+      .sort((a, b) => a.order - b.order);
   }, "yorumlar");
 }
 
 export async function getLookbook(): Promise<LookbookItem[]> {
   return safeQuery(async () => {
     const db = await getDb();
-    const snap = await db
-      .collection("lookbook")
-      .where("isActive", "==", true)
-      .orderBy("order", "asc")
-      .get();
-    return snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as LookbookItem);
+    const snap = await db.collection("lookbook").where("isActive", "==", true).get();
+    return snap.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }) as LookbookItem)
+      .sort((a, b) => a.order - b.order);
   }, "lookbook");
 }

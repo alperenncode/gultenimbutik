@@ -13,7 +13,12 @@
       "PowerShell(Remove-Item \"storage.rules\" -Confirm:$false)",
       "PowerShell(npm run build 2>&1)",
       "PowerShell(git add -A)",
-      "PowerShell(git push origin main)"
+      "PowerShell(git push origin main)",
+      "PowerShell(npx --yes firebase-tools@latest login)",
+      "PowerShell(Rename-Item \"gultenimbutik-firebase-adminsdk-fbsvc-77da341748.json\" \"serviceAccountKey.json\"; $json = Get-Content \"serviceAccountKey.json\" -Raw; $obj = $json | ConvertFrom-Json; Write-Host \"Proje: $\\($obj.project_id\\) / Hesap: $\\($obj.client_email\\)\"; $b64 = [Convert]::ToBase64String\\([Text.Encoding]::UTF8.GetBytes\\($json\\)\\); Set-Content -Path \".env.local\" -Value \"FIREBASE_SERVICE_ACCOUNT_KEY=$b64\" -Encoding ascii; Write-Host \".env.local yazildi \\($\\($b64.Length\\) karakter\\)\"; git check-ignore serviceAccountKey.json .env.local)",
+      "PowerShell(node scripts/deploy-rules.mjs)",
+      "PowerShell(node scripts/add-admin.mjs alperenucm@gmail.com)",
+      "PowerShell($env_content = Get-Content \".env.local\" -Raw; $value = \\($env_content -split \"=\", 2\\)[1].Trim\\(\\); Set-Content -Path \"VERCEL-ANAHTAR.txt\" -Value $value -Encoding ascii; Add-Content -Path \".gitignore\" -Value \"VERCEL-ANAHTAR.txt\" -Encoding ascii; git check-ignore VERCEL-ANAHTAR.txt; Write-Host \"OK - dosya hazir ve git'e girmeyecek\")"
     ]
   }
 }
