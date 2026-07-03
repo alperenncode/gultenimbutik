@@ -46,9 +46,10 @@ export function CategoryCards({ categories }: { categories: Category[] }) {
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-bordeaux/80
                   via-bordeaux/30 to-transparent p-5 pt-14">
                   <p className="font-display text-lg text-cream md:text-xl">{cat.name}</p>
+                  {/* Mobilde her zaman görünür; masaüstünde hover'da belirir */}
                   <p className="mt-0.5 text-[11px] uppercase tracking-luxe text-rosegold-light
-                    opacity-0 -translate-y-1 transition-all duration-300
-                    group-hover:opacity-100 group-hover:translate-y-0">
+                    transition-all duration-300 opacity-100 translate-y-0
+                    lg:opacity-0 lg:-translate-y-1 lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
                     İncele →
                   </p>
                 </div>

@@ -41,12 +41,14 @@ export function Lookbook({ items }: { items: LookbookItem[] }) {
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               {item.caption && (
+                // Mobilde açıklama her zaman görünür; masaüstünde hover'da belirir
                 <div
-                  className="absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t
-                    from-bordeaux/75 to-transparent p-5 pt-12 opacity-0 transition-all
-                    duration-500 group-hover:translate-y-0 group-hover:opacity-100"
+                  className="absolute inset-x-0 bottom-0 bg-gradient-to-t
+                    from-bordeaux/75 to-transparent p-5 pt-12 transition-all duration-500
+                    opacity-100 translate-y-0
+                    lg:opacity-0 lg:translate-y-2 lg:group-hover:translate-y-0 lg:group-hover:opacity-100"
                 >
-                  <p className="font-display text-base italic text-cream">{item.caption}</p>
+                  <p className="font-display text-sm md:text-base italic text-cream">{item.caption}</p>
                 </div>
               )}
             </motion.div>

@@ -22,7 +22,8 @@ const entrance = {
 
 export function FloatingSocialButtons() {
   return (
-    <div className="fixed bottom-5 right-4 sm:bottom-7 sm:right-6 z-50 mb-safe flex flex-col items-end gap-3">
+    // Mobilde biraz küçük ve kenara yakın — içeriği olabildiğince az kapatsın
+    <div className="fixed bottom-4 right-3 sm:bottom-7 sm:right-6 z-50 mb-safe flex flex-col items-end gap-2.5 sm:gap-3">
       {/* Instagram */}
       <motion.a
         custom={1.2}
@@ -45,7 +46,7 @@ export function FloatingSocialButtons() {
         >
           @{SITE.instagramHandle}
         </span>
-        <span className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center">
+        <span className="relative flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center">
           {/* Nabız halkası — WhatsApp ile senkron olmasın diye gecikmeli */}
           <span
             className="absolute inset-0 rounded-full bg-[#DD2A7B] animate-pulse-ring"
@@ -82,7 +83,7 @@ export function FloatingSocialButtons() {
         >
           Sipariş / Bilgi
         </span>
-        <span className="relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center">
+        <span className="relative flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center">
           {/* Nabız halkası */}
           <span className="absolute inset-0 rounded-full bg-[#25D366] animate-pulse-ring" />
           <span

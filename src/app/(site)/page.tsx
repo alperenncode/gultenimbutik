@@ -11,8 +11,8 @@ import {
   getTestimonials,
 } from "@/lib/data";
 
-// Ana sayfa 10 dakikada bir yeniden oluşturulur (ISR)
-export const revalidate = 600;
+// Ana sayfa 5 dakikada bir yeniden oluşturulur (ISR) — admin değişiklikleri hızlı yansır
+export const revalidate = 300;
 
 export default async function HomePage() {
   const [categories, newProducts, popularProducts, lookbook, testimonials] =

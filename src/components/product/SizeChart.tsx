@@ -56,7 +56,8 @@ export function SizeChart() {
                 </button>
               </div>
 
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto">
+              <table className="w-full text-sm min-w-[400px]">
                 <thead>
                   <tr className="border-b border-rosegold/30 text-left text-xs uppercase
                     tracking-wider text-bordeaux/60">
@@ -77,6 +78,7 @@ export function SizeChart() {
                   ))}
                 </tbody>
               </table>
+              </div>
 
               <p className="mt-4 text-xs leading-relaxed text-bordeaux/50">
                 Ölçüler yaklaşıktır; modele göre küçük farklılıklar olabilir. Emin

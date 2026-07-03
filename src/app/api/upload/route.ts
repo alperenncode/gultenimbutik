@@ -61,9 +61,14 @@ export async function POST(request: Request): Promise<NextResponse> {
     const result = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (_pathname, clientPayload) => {
+      onBeforeGenerateToken: async (pathname, clientPayload) => {
         // clientPayload = tarayıcıdan gelen Firebase ID token
         await assertAdmin(clientPayload);
+        // Yalnızca bilinen klasörlere yükleme yapılabilir
+        const allowed = ["products/", "categories/", "lookbook/", "testimonials/"];
+        if (!allowed.some((prefix) => pathname.startsWith(prefix))) {
+          throw new Error("Geçersiz yükleme klasörü.");
+        }
         return {
           allowedContentTypes: ["image/jpeg", "image/png", "image/webp", "image/gif"],
           maximumSizeInBytes: 10 * 1024 * 1024,

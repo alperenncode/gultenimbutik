@@ -51,14 +51,23 @@ service cloud.firestore {
     // (ileride eklenebilecek yetki alanlarının kullanıcı tarafından
     // değiştirilmesini baştan engeller).
     match /users/{uid} {
+      // Favori listesi tip ve boyut sınırı: dev doküman şişirme/istismarını engeller
+      function validWishlist() {
+        return request.resource.data.wishlist is list
+          && request.resource.data.wishlist.size() <= 300;
+      }
+
       allow read: if isSignedIn() && request.auth.uid == uid;
       allow create: if isSignedIn()
         && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['email', 'displayName', 'wishlist', 'createdAt']);
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'wishlist', 'createdAt'])
+        && request.resource.data.email == request.auth.token.email
+        && validWishlist();
       allow update: if isSignedIn()
         && request.auth.uid == uid
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['wishlist', 'displayName']);
+             .hasOnly(['wishlist', 'displayName'])
+        && validWishlist();
       allow delete: if isSignedIn() && request.auth.uid == uid;
     }
 

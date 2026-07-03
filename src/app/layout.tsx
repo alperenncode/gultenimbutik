@@ -56,6 +56,8 @@ export const viewport: Viewport = {
   themeColor: "#2C1A1A",
   width: "device-width",
   initialScale: 1,
+  // iOS çentik/home çubuğu güvenli alanları (env(safe-area-inset-*)) için gerekli
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

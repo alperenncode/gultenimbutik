@@ -34,7 +34,8 @@
       "PowerShell(node scripts/make-test-admin.mjs delete)",
       "PowerShell(Copy-Item \"C:\\\\Users\\\\alper\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--websiteler-g-ltenim-butik2\\\\b1f93240-e938-47fd-8f0e-b4dbbfb395e7\\\\scratchpad\\\\cleanup-tests.mjs\" \"scripts\\\\_cleanup-tests.mjs\")",
       "PowerShell(node scripts/_cleanup-tests.mjs)",
-      "PowerShell(Remove-Item \"scripts\\\\_cleanup-tests.mjs\" -Confirm:$false)"
+      "PowerShell(Remove-Item \"scripts\\\\_cleanup-tests.mjs\" -Confirm:$false)",
+      "PowerShell(Remove-Item \"VERCEL-ANAHTAR.txt\" -Confirm:$false -ErrorAction SilentlyContinue)"
     ]
   }
 }

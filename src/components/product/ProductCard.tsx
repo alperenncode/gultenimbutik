@@ -85,7 +85,9 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           ${
             inWishlist
               ? "bg-rosegold-dark text-white"
-              : "bg-white/90 text-bordeaux/70 opacity-0 group-hover:opacity-100 hover:text-rosegold-dark"
+              : // Dokunmatik ekranlarda hover olmadığından kalp her zaman görünür;
+                // masaüstünde (lg+) hover'da belirir
+                "bg-white/90 text-bordeaux/70 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 hover:text-rosegold-dark"
           }`}
       >
         <Heart size={16} fill={inWishlist ? "currentColor" : "none"} />
