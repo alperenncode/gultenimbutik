@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Elbise",
+    "slug": "elbise",
+    "order": 1,
+    "description": "Zarif tesettür elbise modelleri"
+  },
+  {
+    "name": "Takım",
+    "slug": "takim",
+    "order": 2,
+    "description": "Şık ikili takım kombinleri"
+  },
+  {
+    "name": "Tunik",
+    "slug": "tunik",
+    "order": 3,
+    "description": "Günlük ve özel gün tunikleri"
+  },
+  {
+    "name": "Dış Giyim",
+    "slug": "dis-giyim",
+    "order": 4,
+    "description": "Kap, ferace ve pardösüler"
+  },
+  {
+    "name": "Triko",
+    "slug": "triko",
+    "order": 5,
+    "description": "Kazak, hırka ve triko elbiseler"
+  },
+  {
+    "name": "Abaya",
+    "slug": "abaya",
+    "order": 6,
+    "description": "Abaya ve abaya takımları"
+  }
+]

@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-bordeaux font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-rosegold/30 text-bordeaux;
+  }
+
+  /* İnce, zarif kaydırma çubuğu */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-cream;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-rosegold/60 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-rosegold;
+  }
+}
+
+@layer components {
+  /* Bölüm başlıkları — ince çizgili, lüks görünüm */
+  .section-title {
+    @apply font-display text-3xl md:text-4xl lg:text-5xl text-bordeaux;
+  }
+
+  .section-subtitle {
+    @apply text-xs uppercase tracking-luxe text-rosegold-dark font-medium;
+  }
+
+  /* Ana buton — koyu bordo zemin, rose gold hover */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-bordeaux text-cream
+      px-8 py-3.5 text-sm uppercase tracking-widest font-medium
+      transition-all duration-300 hover:bg-rosegold-dark hover:text-white
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-rosegold;
+  }
+
+  /* İkincil buton — çerçeveli */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 border border-bordeaux/30
+      text-bordeaux px-8 py-3.5 text-sm uppercase tracking-widest font-medium
+      transition-all duration-300 hover:border-rosegold-dark hover:text-rosegold-dark
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-rosegold;
+  }
+
+  /* Form alanları */
+  .input-field {
+    @apply w-full border border-bordeaux/15 bg-white px-4 py-3 text-sm text-bordeaux
+      placeholder:text-bordeaux/35 transition-colors duration-200
+      focus:border-rosegold focus:outline-none focus:ring-1 focus:ring-rosegold/40;
+  }
+
+  .input-label {
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-bordeaux/70;
+  }
+}
+
+@layer utilities {
+  /* iOS güvenli alan — floating butonlar için */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}

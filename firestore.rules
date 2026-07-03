@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Admin kontrolü: admins/{email} dokümanının VARLIĞI yeterlidir.
+    // E-postalar her yerde küçük harfle tutulmalıdır (rules büyük/küçük harfe duyarlıdır).
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // ── Herkese açık katalog verileri: okuma serbest, yazma sadece admin ──
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /lookbook/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Admin listesi ──
+    // Kullanıcı SADECE kendi e-postasının admin olup olmadığını sorgulayabilir
+    // (admin e-postalarının listelenmesini/enumerate edilmesini engeller).
+    // Yazma client'tan tamamen kapalıdır: yeni admin eklemek Firebase Console'dan yapılır.
+    match /admins/{email} {
+      allow get: if isSignedIn() && request.auth.token.email == email;
+      allow list: if false;
+      allow write: if false;
+    }
+
+    // ── Kullanıcı profilleri (favoriler) ──
+    // Herkes yalnızca KENDİ dokümanını okuyup yazabilir.
+    // Güncellemede yalnızca wishlist ve displayName alanları değiştirilebilir
+    // (ileride eklenebilecek yetki alanlarının kullanıcı tarafından
+    // değiştirilmesini baştan engeller).
+    match /users/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow create: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'wishlist', 'createdAt']);
+      allow update: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['wishlist', 'displayName']);
+      allow delete: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Tanımlanmayan her yol varsayılan olarak kapalıdır.
+  }
+}

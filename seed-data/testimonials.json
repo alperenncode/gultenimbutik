@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Ayşe K.",
+    "quote": "Elbise fotoğraftakinden de güzel çıktı. İlgi ve alaka için teşekkürler.",
+    "rating": 5,
+    "order": 1,
+    "isActive": true
+  },
+  {
+    "name": "Fatma D.",
+    "quote": "WhatsApp'tan yazdım, beden konusunda çok yardımcı oldular. Kalite harika.",
+    "rating": 5,
+    "order": 2,
+    "isActive": true
+  }
+]

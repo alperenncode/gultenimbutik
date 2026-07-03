@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(node -v)",
+      "PowerShell(npm -v)",
+      "PowerShell(npm install --no-audit --no-fund)",
+      "PowerShell(npm install server-only --no-audit --no-fund)",
+      "WebFetch(domain:www.gultenimbutik.com.tr)",
+      "PowerShell(node scripts/download-images.mjs)",
+      "PowerShell(npm run build)",
+      "PowerShell(node scripts/seed.mjs init)"
+    ]
+  }
+}
