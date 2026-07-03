@@ -35,7 +35,10 @@
       "PowerShell(Copy-Item \"C:\\\\Users\\\\alper\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--websiteler-g-ltenim-butik2\\\\b1f93240-e938-47fd-8f0e-b4dbbfb395e7\\\\scratchpad\\\\cleanup-tests.mjs\" \"scripts\\\\_cleanup-tests.mjs\")",
       "PowerShell(node scripts/_cleanup-tests.mjs)",
       "PowerShell(Remove-Item \"scripts\\\\_cleanup-tests.mjs\" -Confirm:$false)",
-      "PowerShell(Remove-Item \"VERCEL-ANAHTAR.txt\" -Confirm:$false -ErrorAction SilentlyContinue)"
+      "PowerShell(Remove-Item \"VERCEL-ANAHTAR.txt\" -Confirm:$false -ErrorAction SilentlyContinue)",
+      "PowerShell($r = Invoke-WebRequest -Uri \"https://gultenimbutik.vercel.app/urun/3-boyutlu-cicekli-takim\" -UseBasicParsing; Write-Host \"Durum: $\\($r.StatusCode\\)\"; if \\($r.Content -match '7\\\\.000'\\) { Write-Host \"Urun verisi SSR: GELIYOR \\(Firebase anahtari saglam\\)\" } else { Write-Host \"Urun verisi SSR: GELMIYOR \\(Firebase anahtari BOZUK\\)\" })",
+      "PowerShell($env_content = Get-Content \".env.local\" -Raw; $line = \\($env_content -split \"`n\" | Where-Object { $_ -match \"^FIREBASE_SERVICE_ACCOUNT_KEY=\" }\\); $value = \\($line -split \"=\", 2\\)[1].Trim\\(\\); Set-Content -Path \"VERCEL-ANAHTAR.txt\" -Value $value -Encoding ascii; git check-ignore VERCEL-ANAHTAR.txt; Write-Host \"Yardimci dosya hazir, uzunluk: $\\($value.Length\\)\"; npm run build 2>&1 | Select-String -Pattern \"error|Failed|Compiled successfully\" -CaseSensitive:$false | Select-Object -First 5)",
+      "PowerShell(git commit -m \"FIREBASE_SERVICE_ACCOUNT_KEY ayristirmasi yapistirma hatalarina dayanikli hale getirildi \\(tirnak/bosluk toleransi + net hata mesaji\\)\")"
     ]
   }
 }

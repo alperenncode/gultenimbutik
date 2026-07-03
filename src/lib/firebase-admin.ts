@@ -26,12 +26,28 @@ function getAdminApp(): App {
     );
   }
 
-  // Hem düz JSON hem base64 kodlu JSON desteklenir
-  const json = raw.trim().startsWith("{")
-    ? raw
-    : Buffer.from(raw, "base64").toString("utf8");
+  // Yapıştırma hatalarına dayanıklı ayrıştırma:
+  // baştaki/sondaki tırnaklar ve boşluklar temizlenir; düz JSON veya base64 kabul edilir
+  let cleaned = raw.trim().replace(/^["']+|["']+$/g, "").trim();
+  let json: string;
+  if (cleaned.startsWith("{")) {
+    json = cleaned;
+  } else {
+    // Base64 içinde satır sonu/boşluk olabilir — ayıkla
+    json = Buffer.from(cleaned.replace(/\s+/g, ""), "base64").toString("utf8");
+  }
 
-  return initializeApp({ credential: cert(JSON.parse(json)) });
+  let parsed: object;
+  try {
+    parsed = JSON.parse(json);
+  } catch {
+    throw new Error(
+      "FIREBASE_SERVICE_ACCOUNT_KEY değeri bozuk görünüyor (geçerli JSON/base64 değil). " +
+        "Vercel → Settings → Environment Variables'da değeri doğru anahtarla güncelleyin."
+    );
+  }
+
+  return initializeApp({ credential: cert(parsed) });
 }
 
 export function getAdminDb(): Firestore {
