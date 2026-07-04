@@ -36,6 +36,8 @@ export function ProductsBrowser({ categories }: { categories: Category[] }) {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [size, setSize] = useState("");
+  const [color, setColor] = useState("");
+  const [onlyDiscount, setOnlyDiscount] = useState(false);
   const [sort, setSort] = useState<SortKey>("yeni");
 
   // URL değişince (ör. header aramasından) filtreleri güncelle
@@ -64,12 +66,32 @@ export function ProductsBrowser({ categories }: { categories: Category[] }) {
     return fromProducts.length > 0 ? fromProducts : [...SITE.brands];
   }, [products]);
 
+  // Renk listesi de ürünlerden türetilir — admin yeni renk girdikçe filtre büyür
+  const allColors = useMemo(
+    () => [...new Set(products.flatMap((p) => p.colors).filter(Boolean))],
+    [products]
+  );
+
+  // Filtre seçeneklerinin yanında kaç ürün olduğu gösterilir
+  const counts = useMemo(() => {
+    const byCategory = new Map<string, number>();
+    const byBrand = new Map<string, number>();
+    for (const p of products) {
+      byCategory.set(p.categorySlug, (byCategory.get(p.categorySlug) ?? 0) + 1);
+      if (p.brand) byBrand.set(p.brand, (byBrand.get(p.brand) ?? 0) + 1);
+    }
+    return { byCategory, byBrand };
+  }, [products]);
+
   const filtered = useMemo(() => {
     let list = products;
     if (category) list = list.filter((p) => p.categorySlug === category);
     if (brand) list = list.filter((p) => p.brand === brand);
     if (onlyNew) list = list.filter((p) => p.isNew);
+    if (onlyDiscount)
+      list = list.filter((p) => p.oldPrice != null && p.oldPrice > p.price);
     if (size) list = list.filter((p) => p.sizes.includes(size));
+    if (color) list = list.filter((p) => p.colors.includes(color));
     if (minPrice) list = list.filter((p) => p.price >= Number(minPrice));
     if (maxPrice) list = list.filter((p) => p.price <= Number(maxPrice));
     if (search.trim()) {
@@ -89,20 +111,22 @@ export function ProductsBrowser({ categories }: { categories: Category[] }) {
       default:
         return [...list].sort((a, b) => b.createdAt - a.createdAt);
     }
-  }, [products, category, brand, onlyNew, size, minPrice, maxPrice, search, sort]);
+  }, [products, category, brand, onlyNew, onlyDiscount, size, color, minPrice, maxPrice, search, sort]);
 
   function clearFilters() {
     setCategory("");
     setBrand("");
     setOnlyNew(false);
+    setOnlyDiscount(false);
     setSearch("");
     setMinPrice("");
     setMaxPrice("");
     setSize("");
+    setColor("");
   }
 
   const hasActiveFilter =
-    category || brand || onlyNew || search || minPrice || maxPrice || size;
+    category || brand || onlyNew || onlyDiscount || search || minPrice || maxPrice || size || color;
 
   const filterPanel = (
     <div className="space-y-7">
@@ -116,19 +140,20 @@ export function ProductsBrowser({ categories }: { categories: Category[] }) {
               !category ? "text-rosegold-dark font-medium" : "text-bordeaux/60 hover:text-bordeaux"
             }`}
           >
-            Tümü
+            Tümü <span className="text-bordeaux/35">({products.length})</span>
           </button>
           {categories.map((c) => (
             <button
               key={c.id}
-              onClick={() => setCategory(c.slug)}
+              onClick={() => setCategory(category === c.slug ? "" : c.slug)}
               className={`block text-sm transition-colors ${
                 category === c.slug
                   ? "text-rosegold-dark font-medium"
                   : "text-bordeaux/60 hover:text-bordeaux"
               }`}
             >
-              {c.name}
+              {c.name}{" "}
+              <span className="text-bordeaux/35">({counts.byCategory.get(c.slug) ?? 0})</span>
             </button>
           ))}
         </div>
@@ -149,10 +174,37 @@ export function ProductsBrowser({ categories }: { categories: Category[] }) {
               }`}
             >
               {b}
+              {counts.byBrand.has(b) && (
+                <span className={brand === b ? "ml-1 text-cream/60" : "ml-1 text-bordeaux/35"}>
+                  ({counts.byBrand.get(b)})
+                </span>
+              )}
             </button>
           ))}
         </div>
       </div>
+
+      {/* Renk */}
+      {allColors.length > 0 && (
+        <div>
+          <p className="input-label">Renk</p>
+          <div className="flex flex-wrap gap-2">
+            {allColors.map((c) => (
+              <button
+                key={c}
+                onClick={() => setColor(color === c ? "" : c)}
+                className={`border px-3 py-1.5 text-xs transition-all ${
+                  color === c
+                    ? "border-bordeaux bg-bordeaux text-cream"
+                    : "border-bordeaux/20 text-bordeaux/70 hover:border-rosegold-dark"
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Fiyat aralığı */}
       <div>
@@ -200,16 +252,27 @@ export function ProductsBrowser({ categories }: { categories: Category[] }) {
         </div>
       )}
 
-      {/* Sadece yeni */}
-      <label className="flex cursor-pointer items-center gap-2.5 text-sm text-bordeaux/75">
-        <input
-          type="checkbox"
-          checked={onlyNew}
-          onChange={(e) => setOnlyNew(e.target.checked)}
-          className="h-4 w-4 accent-rosegold-dark"
-        />
-        Sadece yeni gelenler
-      </label>
+      {/* Hızlı filtreler */}
+      <div className="space-y-2.5">
+        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-bordeaux/75">
+          <input
+            type="checkbox"
+            checked={onlyNew}
+            onChange={(e) => setOnlyNew(e.target.checked)}
+            className="h-4 w-4 accent-rosegold-dark"
+          />
+          Sadece yeni gelenler
+        </label>
+        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-bordeaux/75">
+          <input
+            type="checkbox"
+            checked={onlyDiscount}
+            onChange={(e) => setOnlyDiscount(e.target.checked)}
+            className="h-4 w-4 accent-rosegold-dark"
+          />
+          Sadece indirimli ürünler
+        </label>
+      </div>
 
       {hasActiveFilter && (
         <button

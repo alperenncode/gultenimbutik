@@ -3,23 +3,24 @@ import { Providers } from "@/context/Providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingSocialButtons } from "@/components/layout/FloatingSocialButtons";
-import { getCategories } from "@/lib/data";
+import { getCategories, getSiteSettings } from "@/lib/data";
 
-// Kategoriler 10 dakikada bir tazelenir (admin değişiklikleri kısa sürede yansır)
+// Kategoriler ve site ayarları 10 dakikada bir tazelenir
 export const revalidate = 600;
 
 /**
  * Vitrin layout'u — Header, Footer ve sabit sosyal butonlar burada;
  * /admin bu grubun DIŞINDA olduğundan kendi sade layout'unu kullanır.
+ * Site ayarları (iletişim, duyuru vb.) sunucuda çekilip context ile dağıtılır.
  */
 export default async function SiteLayout({ children }: { children: ReactNode }) {
-  const categories = await getCategories();
+  const [categories, settings] = await Promise.all([getCategories(), getSiteSettings()]);
 
   return (
-    <Providers>
+    <Providers settings={settings}>
       <Header categories={categories} />
       <main className="min-h-[60vh]">{children}</main>
-      <Footer categories={categories} />
+      <Footer categories={categories} settings={settings} />
       <FloatingSocialButtons />
     </Providers>
   );

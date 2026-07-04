@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, User, Menu, Search, ChevronDown } from "lucide-react";
-import { SITE } from "@/lib/site";
 import type { Category } from "@/types";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { MegaMenu } from "./MegaMenu";
@@ -21,6 +21,7 @@ export function Header({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
   const { user } = useAuth();
   const { count } = useWishlist();
+  const settings = useSiteSettings();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -45,7 +46,7 @@ export function Header({ categories }: { categories: Category[] }) {
     <>
       {/* Üst duyuru şeridi */}
       <div className="bg-bordeaux text-cream/90 text-center text-[11px] tracking-widest uppercase py-2 px-4">
-        Tüm Türkiye&apos;ye gönderim — Sipariş için WhatsApp: {SITE.phoneDisplay}
+        {settings.announcement}
       </div>
 
       <header

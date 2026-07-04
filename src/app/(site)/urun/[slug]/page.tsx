@@ -6,6 +6,7 @@ import { SITE } from "@/lib/site";
 import { getProductBySlug, getProductsByCategory } from "@/lib/data";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductInfo } from "@/components/product/ProductInfo";
+import { ProductReviews } from "@/components/product/ProductReviews";
 import { ProductShowcase } from "@/components/home/ProductShowcase";
 
 // Ürün detayları 5 dakikada bir tazelenir
@@ -78,6 +79,13 @@ export default async function ProductPage({ params }: Props) {
           <ProductInfo product={product} productUrl={productUrl} />
         </div>
       </div>
+
+      {/* Müşteri yorumları — onaylılar listelenir, üyeler yeni yorum yazabilir */}
+      <ProductReviews
+        productId={product.id}
+        productSlug={product.slug}
+        productName={product.name}
+      />
 
       {related.length > 0 && (
         <ProductShowcase

@@ -16,6 +16,7 @@ import {
   FolderTree,
   MessageSquareQuote,
   Images,
+  Settings,
   LogOut,
   Loader2,
   ExternalLink,
@@ -31,6 +32,7 @@ const NAV = [
   { href: "/admin/kategoriler", label: "Kategoriler", icon: FolderTree },
   { href: "/admin/lookbook", label: "Lookbook", icon: Images },
   { href: "/admin/yorumlar", label: "Yorumlar", icon: MessageSquareQuote },
+  { href: "/admin/ayarlar", label: "Site Ayarları", icon: Settings },
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {

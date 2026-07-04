@@ -27,3 +27,47 @@ export const SITE = {
 export function formatPrice(price: number): string {
   return `${price.toLocaleString("tr-TR")} ₺`;
 }
+
+import type { SiteSettings } from "@/types";
+
+/**
+ * Site ayarlarının varsayılanları — Firestore'daki settings/site dokümanı
+ * boşsa/eksikse bunlar kullanılır. Admin panelindeki "Site Ayarları"
+ * sayfası bu değerlerin üzerine yazar.
+ */
+export const DEFAULT_SETTINGS: SiteSettings = {
+  announcement: `Tüm Türkiye'ye gönderim — Sipariş için WhatsApp: ${SITE.phoneDisplay}`,
+  phoneDisplay: SITE.phoneDisplay,
+  whatsappNumber: SITE.whatsappNumber,
+  instagramHandle: SITE.instagramHandle,
+  email: SITE.email,
+  address: SITE.address,
+  aboutTitle: "Gültenim Butik",
+  aboutText: [
+    "Gültenim Butik, tesettür giyimde zarafeti ve kaliteyi bir araya getirme hayaliyle Erzurum'da doğdu. Bugün Selvi Çetin ve İnvee koleksiyonlarıyla Türkiye'nin dört bir yanındaki müşterilerimize ulaşıyoruz.",
+    'Her parçayı tek tek, özenle seçiyoruz. Vitrinimizde gördüğünüz her elbise, takım ve dış giyim modeli; kumaşı, dikişi ve duruşuyla titizlikle incelenmiş, "kendimiz giyer miydik?" sorusunu geçmiş üründür.',
+    "Alışveriş deneyimimiz de kendimize has: sepet yok, karmaşık ödeme adımları yok. Beğendiğiniz ürünü WhatsApp'tan tek mesajla sorarsınız; rengi, bedeni, kombin önerisiyle birlikte size özel ilgileniriz. Çünkü bize göre alışveriş bir işlem değil, bir sohbettir.",
+  ].join("\n\n"),
+  aboutQuote: "Zarafet, detaylarda gizlidir.",
+};
+
+/**
+ * Firestore'dan gelen ham ayar verisini varsayılanlarla birleştirir.
+ * Boş string bırakılan alanlar varsayılana döner (yanlışlıkla silinen
+ * bir alan siteyi bilgisiz bırakmasın diye).
+ */
+export function mergeSettings(data: Record<string, unknown> | undefined | null): SiteSettings {
+  const merged = { ...DEFAULT_SETTINGS };
+  if (data) {
+    for (const key of Object.keys(DEFAULT_SETTINGS) as (keyof SiteSettings)[]) {
+      const v = data[key];
+      if (typeof v === "string" && v.trim() !== "") merged[key] = v;
+    }
+  }
+  return merged;
+}
+
+/** Instagram profil linki — handle'dan üretilir */
+export function instagramUrlOf(handle: string): string {
+  return `https://www.instagram.com/${handle.replace(/^@/, "")}`;
+}

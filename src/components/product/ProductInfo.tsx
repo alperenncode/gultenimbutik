@@ -8,9 +8,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Heart, MessageCircle, Instagram, ChevronDown, Check, Share2 } from "lucide-react";
-import { SITE, formatPrice } from "@/lib/site";
+import { formatPrice } from "@/lib/site";
 import { buildProductOrderLink } from "@/lib/whatsapp";
 import type { Product } from "@/types";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { SizeChart } from "./SizeChart";
 
@@ -54,12 +55,14 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
   const [shared, setShared] = useState(false);
   const { isInWishlist, toggle } = useWishlist();
   const inWishlist = isInWishlist(product.id);
+  const settings = useSiteSettings();
 
   const whatsappLink = buildProductOrderLink({
     productName: product.name,
     productUrl,
     color,
     size,
+    whatsappNumber: settings.whatsappNumber,
   });
 
   /** Instagram'da Paylaş: mobilde yerel paylaşım menüsü, masaüstünde link kopyalanıp profil açılır */
@@ -79,7 +82,7 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
     } catch {
       /* pano erişimi yok */
     }
-    window.open(SITE.instagramUrl, "_blank", "noopener,noreferrer");
+    window.open(settings.instagramUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -167,7 +170,7 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
         WhatsApp&apos;tan Sipariş Ver
       </motion.a>
       <p className="mt-2.5 text-center text-xs text-bordeaux/50">
-        {SITE.phoneDisplay} — mesajınıza ürün bilgileri otomatik eklenir
+        {settings.phoneDisplay} — mesajınıza ürün bilgileri otomatik eklenir
       </p>
 
       {/* İkincil aksiyonlar */}
@@ -204,7 +207,7 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
           <Accordion title="Kumaş & Bakım">{product.fabricCare}</Accordion>
         )}
         <Accordion title="Sipariş & Teslimat">
-          {`Siparişleriniz WhatsApp (${SITE.phoneDisplay}) veya Instagram (@${SITE.instagramHandle}) üzerinden alınır.\n\nBeğendiğiniz ürünün linkini göndermeniz yeterli — renk ve beden seçiminizde size yardımcı oluruz. Türkiye'nin her yerine güvenli gönderim yapılır.`}
+          {`Siparişleriniz WhatsApp (${settings.phoneDisplay}) veya Instagram (@${settings.instagramHandle}) üzerinden alınır.\n\nBeğendiğiniz ürünün linkini göndermeniz yeterli — renk ve beden seçiminizde size yardımcı oluruz. Türkiye'nin her yerine güvenli gönderim yapılır.`}
         </Accordion>
       </div>
     </div>

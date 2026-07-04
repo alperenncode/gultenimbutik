@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { X, ChevronDown, Instagram, Phone } from "lucide-react";
-import { SITE } from "@/lib/site";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
 import type { Category } from "@/types";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { useAuth } from "@/context/AuthContext";
 
 /** Mobil menü — soldan kayan çekmece, kategoriler akordeon olarak açılır. */
@@ -19,6 +19,7 @@ export function MobileNav({
 }) {
   const [catsOpen, setCatsOpen] = useState(true);
   const { user } = useAuth();
+  const settings = useSiteSettings();
 
   const item = "block py-3 text-bordeaux/85 text-[15px] tracking-wide border-b border-rosegold/10";
 
@@ -110,7 +111,7 @@ export function MobileNav({
         {/* Alt iletişim kısayolları */}
         <div className="px-6 py-5 border-t border-rosegold/15 flex gap-3">
           <a
-            href={buildGeneralWhatsAppLink()}
+            href={buildGeneralWhatsAppLink(settings.whatsappNumber)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 inline-flex items-center justify-center gap-2 bg-[#25D366] text-white
@@ -119,7 +120,7 @@ export function MobileNav({
             <Phone size={16} /> WhatsApp
           </a>
           <a
-            href={SITE.instagramUrl}
+            href={settings.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 inline-flex items-center justify-center gap-2 bg-bordeaux text-cream

@@ -7,8 +7,8 @@
  */
 import { motion } from "framer-motion";
 import { Instagram, MessageCircle } from "lucide-react";
-import { SITE } from "@/lib/site";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 const entrance = {
   hidden: { opacity: 0, scale: 0, y: 24 },
@@ -21,6 +21,7 @@ const entrance = {
 };
 
 export function FloatingSocialButtons() {
+  const settings = useSiteSettings();
   return (
     // Mobilde biraz küçük ve kenara yakın — içeriği olabildiğince az kapatsın
     <div className="fixed bottom-4 right-3 sm:bottom-7 sm:right-6 z-50 mb-safe flex flex-col items-end gap-2.5 sm:gap-3">
@@ -32,7 +33,7 @@ export function FloatingSocialButtons() {
         animate="visible"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
-        href={SITE.instagramUrl}
+        href={settings.instagramUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Instagram'da bizi takip edin"
@@ -44,7 +45,7 @@ export function FloatingSocialButtons() {
             group-hover:max-w-[140px] group-hover:opacity-100 group-hover:mr-1
             bg-cream/95 px-0 group-hover:px-3 py-2 rounded-full shadow-soft"
         >
-          @{SITE.instagramHandle}
+          @{settings.instagramHandle}
         </span>
         <span className="relative flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center">
           {/* Nabız halkası — WhatsApp ile senkron olmasın diye gecikmeli */}
@@ -69,7 +70,7 @@ export function FloatingSocialButtons() {
         animate="visible"
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
-        href={buildGeneralWhatsAppLink()}
+        href={buildGeneralWhatsAppLink(settings.whatsappNumber)}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="WhatsApp'tan yazın"

@@ -65,3 +65,44 @@ export interface UserProfile {
   wishlist: string[];
   createdAt: number;
 }
+
+/**
+ * Ürün yorumu — yalnızca üye olan müşteriler yazabilir.
+ * `name` kayıt anında maskelenmiş halde tutulur (ör. "Ayşe K."),
+ * `approved` false başlar; admin onaylayınca sitede görünür.
+ */
+export interface Review {
+  id: string;
+  productId: string;
+  productSlug: string;
+  /** Admin panelinde hangi ürüne ait olduğu görünsün diye denormalize edilir */
+  productName: string;
+  userId: string;
+  /** Maskelenmiş görünen ad: "İsim S." */
+  name: string;
+  rating: number; // 1-5
+  text: string;
+  approved: boolean;
+  createdAt: number; // millis
+}
+
+/**
+ * Site geneli ayarlar — Firestore'daki settings/site dokümanında tutulur,
+ * admin panelinden düzenlenir. Boş bırakılan alanlar için lib/site.ts'teki
+ * varsayılanlar kullanılır.
+ */
+export interface SiteSettings {
+  /** Header üstündeki duyuru şeridi metni */
+  announcement: string;
+  /** Görüntülenen telefon: "0533 285 36 39" */
+  phoneDisplay: string;
+  /** wa.me linkleri için uluslararası format: "905332853639" */
+  whatsappNumber: string;
+  instagramHandle: string;
+  email: string;
+  address: string;
+  /** Hakkımızda sayfası içeriği — boş satırla ayrılan her blok bir paragraf olur */
+  aboutTitle: string;
+  aboutText: string;
+  aboutQuote: string;
+}

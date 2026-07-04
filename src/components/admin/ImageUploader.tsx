@@ -110,14 +110,17 @@ export function ImageUploader({
       >
         <UploadCloud size={26} strokeWidth={1.4} />
         <span>Görselleri sürükleyin veya tıklayıp seçin</span>
+        <span className="font-medium text-rosegold-dark">
+          Kabul edilen formatlar: JPG · PNG · WebP · GIF
+        </span>
         <span className="text-xs text-bordeaux/40">
-          En fazla {max} görsel · JPG, PNG, WebP · maks. 10 MB
+          En fazla {max} görsel · dosya başına en çok 10 MB
         </span>
       </button>
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp,image/gif"
         multiple
         hidden
         onChange={(e) => {

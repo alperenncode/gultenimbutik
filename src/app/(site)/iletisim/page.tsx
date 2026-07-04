@@ -1,46 +1,52 @@
 import type { Metadata } from "next";
 import { Instagram, Phone, Mail, MapPin, Clock } from "lucide-react";
-import { SITE } from "@/lib/site";
+import { SITE, instagramUrlOf } from "@/lib/site";
+import { getSiteSettings } from "@/lib/data";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
 import { Reveal } from "@/components/ui/Reveal";
 
+// İletişim bilgileri admin panelindeki "Site Ayarları" sayfasından düzenlenir
+export const revalidate = 600;
+
 export const metadata: Metadata = {
   title: "İletişim",
-  description: `${SITE.name} iletişim — WhatsApp: ${SITE.phoneDisplay}, Instagram: @${SITE.instagramHandle}. ${SITE.address}`,
+  description: `${SITE.name} iletişim — WhatsApp, Instagram ve e-posta ile bize ulaşın.`,
 };
 
-const items = [
-  {
-    icon: Phone,
-    title: "WhatsApp Sipariş Hattı",
-    line: SITE.phoneDisplay,
-    href: buildGeneralWhatsAppLink(),
-    note: "En hızlı yanıt — ürün linkini gönderin, gerisini biz halledelim.",
-  },
-  {
-    icon: Instagram,
-    title: "Instagram",
-    line: `@${SITE.instagramHandle}`,
-    href: SITE.instagramUrl,
-    note: "Yeni gelenleri ilk burada paylaşıyoruz. DM'den sipariş verebilirsiniz.",
-  },
-  {
-    icon: Mail,
-    title: "E-posta",
-    line: SITE.email,
-    href: `mailto:${SITE.email}`,
-    note: "Kurumsal talepler ve iş birlikleri için.",
-  },
-  {
-    icon: MapPin,
-    title: "Mağazamız",
-    line: SITE.address,
-    href: undefined,
-    note: "Erzurum'daysanız bekleriz — ürünleri yerinde görüp deneyebilirsiniz.",
-  },
-];
+export default async function ContactPage() {
+  const settings = await getSiteSettings();
 
-export default function ContactPage() {
+  const items = [
+    {
+      icon: Phone,
+      title: "WhatsApp Sipariş Hattı",
+      line: settings.phoneDisplay,
+      href: buildGeneralWhatsAppLink(settings.whatsappNumber),
+      note: "En hızlı yanıt — ürün linkini gönderin, gerisini biz halledelim.",
+    },
+    {
+      icon: Instagram,
+      title: "Instagram",
+      line: `@${settings.instagramHandle}`,
+      href: instagramUrlOf(settings.instagramHandle),
+      note: "Yeni gelenleri ilk burada paylaşıyoruz. DM'den sipariş verebilirsiniz.",
+    },
+    {
+      icon: Mail,
+      title: "E-posta",
+      line: settings.email,
+      href: `mailto:${settings.email}`,
+      note: "Kurumsal talepler ve iş birlikleri için.",
+    },
+    {
+      icon: MapPin,
+      title: "Mağazamız",
+      line: settings.address,
+      href: undefined,
+      note: "Erzurum'daysanız bekleriz — ürünleri yerinde görüp deneyebilirsiniz.",
+    },
+  ];
+
   return (
     <div className="mx-auto max-w-4xl px-6 py-20">
       <Reveal className="text-center">

@@ -6,7 +6,8 @@
  * konsola uyarı yazılır — böylece geliştirme, Firebase kurulumundan önce başlayabilir.
  */
 import "server-only";
-import type { Product, Category, Testimonial, LookbookItem } from "@/types";
+import type { Product, Category, Testimonial, LookbookItem, SiteSettings } from "@/types";
+import { mergeSettings, DEFAULT_SETTINGS } from "@/lib/site";
 
 type DocData = FirebaseFirestore.DocumentSnapshot;
 
@@ -160,6 +161,24 @@ export async function getTestimonials(): Promise<Testimonial[]> {
       .map((doc) => ({ id: doc.id, ...doc.data() }) as Testimonial)
       .sort((a, b) => a.order - b.order);
   }, "yorumlar");
+}
+
+/**
+ * Site ayarları — settings/site dokümanı, varsayılanlarla birleştirilir.
+ * Firestore'a ulaşılamazsa site sabitleriyle çalışmaya devam eder.
+ */
+export async function getSiteSettings(): Promise<SiteSettings> {
+  try {
+    const db = await getDb();
+    const snap = await db.collection("settings").doc("site").get();
+    return mergeSettings(snap.exists ? snap.data() : null);
+  } catch (err) {
+    console.warn(
+      "[data] site ayarları çekilemedi, varsayılanlar kullanılıyor:",
+      err instanceof Error ? err.message : err
+    );
+    return DEFAULT_SETTINGS;
+  }
 }
 
 export async function getLookbook(): Promise<LookbookItem[]> {

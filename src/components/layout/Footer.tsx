@@ -1,10 +1,19 @@
 import Link from "next/link";
-import { Instagram, Phone, Mail, MapPin } from "lucide-react";
-import { SITE } from "@/lib/site";
+import { Instagram, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { SITE, DEFAULT_SETTINGS, instagramUrlOf } from "@/lib/site";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
-import type { Category } from "@/types";
+import type { Category, SiteSettings } from "@/types";
 
-export function Footer({ categories }: { categories: Category[] }) {
+export function Footer({
+  categories,
+  settings = DEFAULT_SETTINGS,
+}: {
+  categories: Category[];
+  settings?: SiteSettings;
+}) {
+  const instagramUrl = instagramUrlOf(settings.instagramHandle);
+  const whatsappLink = buildGeneralWhatsAppLink(settings.whatsappNumber);
+
   return (
     <footer className="bg-bordeaux text-cream/80">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16">
@@ -20,7 +29,7 @@ export function Footer({ categories }: { categories: Category[] }) {
             </p>
             <div className="mt-6 flex gap-3">
               <a
-                href={SITE.instagramUrl}
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -30,7 +39,7 @@ export function Footer({ categories }: { categories: Category[] }) {
                 <Instagram size={17} strokeWidth={1.5} />
               </a>
               <a
-                href={buildGeneralWhatsAppLink()}
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
@@ -97,19 +106,22 @@ export function Footer({ categories }: { categories: Category[] }) {
             <ul className="space-y-4 text-sm text-cream/60">
               <li className="flex gap-3">
                 <Phone size={16} className="mt-0.5 shrink-0 text-rosegold" />
-                <a href={`tel:+9${SITE.whatsappNumber.slice(1)}`} className="hover:text-rosegold transition-colors">
-                  {SITE.phoneDisplay}
+                <a
+                  href={`tel:+${settings.whatsappNumber}`}
+                  className="hover:text-rosegold transition-colors"
+                >
+                  {settings.phoneDisplay}
                 </a>
               </li>
               <li className="flex gap-3">
                 <Mail size={16} className="mt-0.5 shrink-0 text-rosegold" />
-                <a href={`mailto:${SITE.email}`} className="hover:text-rosegold transition-colors">
-                  {SITE.email}
+                <a href={`mailto:${settings.email}`} className="hover:text-rosegold transition-colors">
+                  {settings.email}
                 </a>
               </li>
               <li className="flex gap-3">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-rosegold" />
-                <span>{SITE.address}</span>
+                <span>{settings.address}</span>
               </li>
             </ul>
           </div>
@@ -121,6 +133,30 @@ export function Footer({ categories }: { categories: Category[] }) {
           <p className="tracking-wide">
             Siparişler yalnızca WhatsApp ve Instagram üzerinden alınmaktadır.
           </p>
+        </div>
+
+        {/* Geliştirici imzası */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1
+          text-[11px] text-cream/30">
+          <span>Tasarım &amp; Geliştirme: Alperen Uçum</span>
+          <span aria-hidden="true">·</span>
+          <a
+            href="https://www.instagram.com/alperenucm"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 transition-colors hover:text-rosegold"
+          >
+            <Instagram size={11} /> alperenucm
+          </a>
+          <span aria-hidden="true">·</span>
+          <a
+            href="https://wa.me/905388525320"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 transition-colors hover:text-rosegold"
+          >
+            <MessageCircle size={11} /> 0538 852 53 20
+          </a>
         </div>
       </div>
     </footer>

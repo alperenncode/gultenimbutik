@@ -9,6 +9,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -20,6 +21,7 @@ const fadeUp = {
 };
 
 export function Hero({ imageUrl }: { imageUrl?: string }) {
+  const settings = useSiteSettings();
   return (
     <section className="relative overflow-hidden bg-cream">
       {/* Dekoratif zemin halkaları */}
@@ -83,7 +85,7 @@ export function Hero({ imageUrl }: { imageUrl?: string }) {
                 <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
               <a
-                href={buildGeneralWhatsAppLink()}
+                href={buildGeneralWhatsAppLink(settings.whatsappNumber)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-outline"
