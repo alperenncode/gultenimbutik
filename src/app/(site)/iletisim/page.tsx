@@ -4,6 +4,7 @@ import { SITE, instagramUrlOf } from "@/lib/site";
 import { getSiteSettings } from "@/lib/data";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
 import { Reveal } from "@/components/ui/Reveal";
+import { SiteQr } from "@/components/ui/SiteQr";
 
 // İletişim bilgileri admin panelindeki "Site Ayarları" sayfasından düzenlenir
 export const revalidate = 600;
@@ -84,6 +85,14 @@ export default async function ContactPage() {
           </Reveal>
         ))}
       </div>
+
+      {/* Zarif QR — siteyi telefonla açmak/paylaşmak için */}
+      <Reveal delay={0.25} className="mt-14 flex flex-col items-center gap-3 text-center">
+        <p className="section-subtitle">Siteyi Paylaşın</p>
+        <div className="text-bordeaux/50">
+          <SiteQr size={148} caption="Kamerayla okutun — Gültenim Butik açılır" />
+        </div>
+      </Reveal>
 
       <Reveal delay={0.3} className="mt-10 flex items-center justify-center gap-2 text-xs text-bordeaux/45">
         <Clock size={14} />

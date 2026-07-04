@@ -2,8 +2,13 @@
  * Basit service worker — PWA yüklenebilirliği için.
  * Strateji: ağ öncelikli (site her zaman güncel kalır); statik ikon/font gibi
  * dosyalar önbelleğe alınır, çevrimdışıyken önbellekten sunulur.
+ *
+ * ÖNEMLİ: Yalnızca KENDİ alan adımızdaki GET istekleri ele alınır.
+ * Firestore'un canlı bağlantıları (firestore.googleapis.com) gibi üçüncü
+ * taraf istekler tarayıcıya bırakılır — araya girmek bu uzun ömürlü
+ * bağlantıları koparıyordu.
  */
-const CACHE = "gultenim-v1";
+const CACHE = "gultenim-v2";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
@@ -28,10 +33,11 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
-  // Yalnızca kendi alan adımızdaki statik varlıkları önbellekle
+  // Üçüncü taraf istekler (Firestore, analitik vb.) tarayıcıya bırakılır
+  if (url.origin !== self.location.origin) return;
+
   const isStatic =
-    url.origin === self.location.origin &&
-    (url.pathname.startsWith("/icons/") || url.pathname.startsWith("/_next/static/"));
+    url.pathname.startsWith("/icons/") || url.pathname.startsWith("/_next/static/");
 
   if (isStatic) {
     // Önbellek öncelikli — statikler değişmez (hash'li)

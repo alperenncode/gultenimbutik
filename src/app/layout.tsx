@@ -4,11 +4,15 @@ import { SITE } from "@/lib/site";
 import { PwaRegister } from "@/components/ui/PwaRegister";
 import "./globals.css";
 
+// preload: false — tarayıcı yalnızca gerçekten kullanılan font dosyalarını
+// indirir; "preload edilen kaynak kullanılmadı" konsol uyarılarını önler
+// (display: "swap" sayesinde yazılar font inene kadar sistem fontuyla görünür)
 const poppins = Poppins({
   subsets: ["latin", "latin-ext"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-poppins",
   display: "swap",
+  preload: false,
 });
 
 const playfair = Playfair_Display({
@@ -16,6 +20,7 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
   variable: "--font-playfair",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {

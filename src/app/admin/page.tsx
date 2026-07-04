@@ -3,15 +3,33 @@
 /** Panel özeti — koleksiyon sayıları ve hızlı erişim kartları. */
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Package, FolderTree, MessageSquareQuote, Images, Plus } from "lucide-react";
+import { Package, FolderTree, MessageSquareQuote, Images, Plus, Users } from "lucide-react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase-client";
 import { HelpTip } from "@/components/admin/HelpTip";
 import { fetchAllProductsAdmin } from "@/lib/firestore/products";
 import { fetchCategories } from "@/lib/firestore/categories";
 import { fetchAllTestimonialsAdmin } from "@/lib/firestore/testimonials";
 import { fetchAllLookbookAdmin } from "@/lib/firestore/lookbook";
 
+/** stats/visits dokümanını okur — toplam ve bugünkü ziyaret */
+async function fetchVisits(): Promise<{ total: number; today: number }> {
+  try {
+    const snap = await getDoc(doc(db, "stats", "visits"));
+    if (!snap.exists()) return { total: 0, today: 0 };
+    const d = snap.data();
+    const todayKey = new Intl.DateTimeFormat("en-CA", {
+      year: "numeric", month: "2-digit", day: "2-digit",
+    }).format(new Date());
+    return { total: d.total ?? 0, today: d.days?.[todayKey] ?? 0 };
+  } catch {
+    return { total: 0, today: 0 };
+  }
+}
+
 export default function AdminDashboard() {
   const [counts, setCounts] = useState({ products: 0, active: 0, categories: 0, testimonials: 0, lookbook: 0 });
+  const [visits, setVisits] = useState({ total: 0, today: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,21 +38,24 @@ export default function AdminDashboard() {
       fetchCategories(),
       fetchAllTestimonialsAdmin(),
       fetchAllLookbookAdmin(),
+      fetchVisits(),
     ])
-      .then(([products, categories, testimonials, lookbook]) =>
+      .then(([products, categories, testimonials, lookbook, v]) => {
         setCounts({
           products: products.length,
           active: products.filter((p) => p.isActive).length,
           categories: categories.length,
           testimonials: testimonials.length,
           lookbook: lookbook.length,
-        })
-      )
+        });
+        setVisits(v);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
   const cards = [
+    { label: "Ziyaret", value: visits.total.toLocaleString("tr-TR"), note: `bugün ${visits.today}`, href: "/admin", icon: Users },
     { label: "Ürün", value: `${counts.active}/${counts.products}`, note: "aktif / toplam", href: "/admin/urunler", icon: Package },
     { label: "Kategori", value: counts.categories, note: "koleksiyon", href: "/admin/kategoriler", icon: FolderTree },
     { label: "Lookbook", value: counts.lookbook, note: "görsel", href: "/admin/lookbook", icon: Images },
@@ -66,8 +87,10 @@ export default function AdminDashboard() {
               </p>
               <p>
                 Bu sayfadaki kartlar özet gösterir; bir karta dokununca ilgili
-                bölüme gidersiniz. Her bölümde bunun gibi <strong>?</strong> işaretleri
-                var — takıldığınız yerde dokunup okuyabilirsiniz.
+                bölüme gidersiniz. <strong>Ziyaret</strong> kartı sitenizin toplam ve
+                bugünkü ziyaret sayısını gösterir (her ziyaretçi, tarayıcı oturumu
+                başına bir kez sayılır). Her bölümde bunun gibi <strong>?</strong>{" "}
+                işaretleri var — takıldığınız yerde dokunup okuyabilirsiniz.
               </p>
             </HelpTip>
           </h1>
@@ -78,7 +101,7 @@ export default function AdminDashboard() {
         </Link>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {cards.map((card) => (
           <Link
             key={card.label}

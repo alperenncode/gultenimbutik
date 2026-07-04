@@ -35,6 +35,18 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ── Ziyaretçi sayacı ──
+    // Herkes sayacı yalnızca 1 artırabilir (total alanı tam +1 olmalı);
+    // okumak sadece admin'e açıktır (panelde gösterilir).
+    match /stats/visits {
+      allow read: if isAdmin();
+      allow create: if request.resource.data.keys().hasOnly(['total', 'days'])
+        && request.resource.data.total == 1;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['total', 'days'])
+        && request.resource.data.total == resource.data.total + 1;
+    }
+
     // ── Site ayarları (iletişim bilgileri, hakkımızda metni, duyuru) ──
     // Herkes okuyabilir (site bu bilgileri gösterir), yalnızca admin yazabilir.
     match /settings/{docId} {

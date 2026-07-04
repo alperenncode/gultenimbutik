@@ -3,6 +3,7 @@ import { Providers } from "@/context/Providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingSocialButtons } from "@/components/layout/FloatingSocialButtons";
+import { VisitTracker } from "@/components/ui/VisitTracker";
 import { getCategories, getSiteSettings } from "@/lib/data";
 
 // Kategoriler ve site ayarları 10 dakikada bir tazelenir
@@ -22,6 +23,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <main className="min-h-[60vh]">{children}</main>
       <Footer categories={categories} settings={settings} />
       <FloatingSocialButtons />
+      <VisitTracker />
     </Providers>
   );
 }

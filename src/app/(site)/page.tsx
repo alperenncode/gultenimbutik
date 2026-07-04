@@ -33,23 +33,24 @@ export default async function HomePage() {
   // Hero görseli: lookbook'un ilk görseli, yoksa ilk yeni ürünün görseli
   const heroImage = lookbook[0]?.imageUrl ?? newProducts[0]?.images?.[0];
 
+  // Sıralama: Popüler Ürünler ve Stil Önerileri sayfanın ÜST kısmında
   return (
     <>
       <Hero imageUrl={heroImage} />
-      <CategoryCards categories={categories} />
-      <ProductShowcase
-        subtitle="Yeni Sezon"
-        title="Yeni Gelenler"
-        products={newProducts}
-        viewAllHref="/urunler?filtre=yeni"
-      />
-      <Lookbook items={lookbook} />
       <ProductShowcase
         subtitle="Çok Beğenilenler"
         title="Popüler Ürünler"
         products={popularProducts}
         viewAllHref="/urunler"
         tinted
+      />
+      <Lookbook items={lookbook} />
+      <CategoryCards categories={categories} />
+      <ProductShowcase
+        subtitle="Yeni Sezon"
+        title="Yeni Gelenler"
+        products={newProducts}
+        viewAllHref="/urunler?filtre=yeni"
       />
       <Testimonials testimonials={combinedTestimonials} />
     </>

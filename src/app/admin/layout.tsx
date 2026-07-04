@@ -26,6 +26,8 @@ import {
 } from "lucide-react";
 import { Providers } from "@/context/Providers";
 import { useAuth } from "@/context/AuthContext";
+import { TwoFactorGate } from "@/components/admin/TwoFactorGate";
+import { isTwoFactorVerified } from "@/lib/two-factor";
 
 const NAV = [
   { href: "/admin", label: "Panel", icon: LayoutDashboard },
@@ -113,25 +115,38 @@ function AdminShell({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const isLoginPage = pathname === "/admin/login";
+  // Doğrulama sayfası da guard'sız çalışır — e-postadaki bağlantı buraya iner
+  const isVerifyPage = pathname === "/admin/dogrula";
   const denied = !loading && (!user || !isAdmin);
+
+  // İki adımlı doğrulama durumu: null = henüz bakılmadı
+  const [twoFA, setTwoFA] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (user) setTwoFA(isTwoFactorVerified(user.uid));
+  }, [user, pathname]);
 
   // Yönlendirme render sırasında değil, effect içinde yapılır (titreme önlenir)
   useEffect(() => {
-    if (!isLoginPage && denied) router.replace("/admin/login");
-  }, [isLoginPage, denied, router]);
+    if (!isLoginPage && !isVerifyPage && denied) router.replace("/admin/login");
+  }, [isLoginPage, isVerifyPage, denied, router]);
 
   // Sayfa değişince mobil çekmeceyi kapat
   useEffect(() => setDrawerOpen(false), [pathname]);
 
-  // Login sayfası guard'sız gösterilir
-  if (isLoginPage) return <>{children}</>;
+  // Login ve doğrulama sayfaları guard'sız gösterilir
+  if (isLoginPage || isVerifyPage) return <>{children}</>;
 
-  if (loading || denied) {
+  if (loading || denied || twoFA === null) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-cream">
         <Loader2 size={30} className="animate-spin text-rosegold-dark" />
       </div>
     );
+  }
+
+  // Şifre girildi ama ikinci adım tamamlanmadı → doğrulama ekranı
+  if (!twoFA) {
+    return <TwoFactorGate onVerified={() => setTwoFA(true)} />;
   }
 
   return (

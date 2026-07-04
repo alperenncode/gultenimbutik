@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Instagram, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Instagram, Phone, Mail, MapPin, MessageCircle, ExternalLink } from "lucide-react";
 import { SITE, DEFAULT_SETTINGS, instagramUrlOf } from "@/lib/site";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
+import { SiteQr } from "@/components/ui/SiteQr";
 import type { Category, SiteSettings } from "@/types";
 
 export function Footer({
@@ -73,20 +74,10 @@ export function Footer({
             </ul>
           </div>
 
-          {/* Kurumsal */}
+          {/* Kurumsal — gizlilik ve güvenlik en üstte */}
           <div>
             <p className="text-xs uppercase tracking-luxe text-rosegold mb-5">Kurumsal</p>
             <ul className="space-y-3 text-sm">
-              <li>
-                <Link href="/hakkimizda" className="text-cream/60 transition-colors hover:text-rosegold">
-                  Hakkımızda
-                </Link>
-              </li>
-              <li>
-                <Link href="/iletisim" className="text-cream/60 transition-colors hover:text-rosegold">
-                  İletişim
-                </Link>
-              </li>
               <li>
                 <Link href="/gizlilik-politikasi" className="text-cream/60 transition-colors hover:text-rosegold">
                   Gizlilik Politikası (KVKK)
@@ -97,10 +88,20 @@ export function Footer({
                   Kullanım Koşulları
                 </Link>
               </li>
+              <li>
+                <Link href="/hakkimizda" className="text-cream/60 transition-colors hover:text-rosegold">
+                  Hakkımızda
+                </Link>
+              </li>
+              <li>
+                <Link href="/iletisim" className="text-cream/60 transition-colors hover:text-rosegold">
+                  İletişim
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* İletişim */}
+          {/* İletişim + QR */}
           <div>
             <p className="text-xs uppercase tracking-luxe text-rosegold mb-5">İletişim</p>
             <ul className="space-y-4 text-sm text-cream/60">
@@ -124,6 +125,11 @@ export function Footer({
                 <span>{settings.address}</span>
               </li>
             </ul>
+
+            {/* Zarif QR — telefonla okutunca site açılır */}
+            <div className="mt-6 text-rosegold/70">
+              <SiteQr size={116} caption="Kamerayla okutun, site açılsın" />
+            </div>
           </div>
         </div>
 
@@ -135,27 +141,34 @@ export function Footer({
           </p>
         </div>
 
-        {/* Geliştirici imzası — mobilde sol altta alt alta, geniş ekranda ortada tek satır */}
-        <div className="mt-6 flex flex-col items-start gap-1.5 text-[11px] text-cream/30
-          md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-x-2 md:gap-y-1">
+        {/* Geliştirici imzası — mobilde sol altta alt alta, geniş ekranda ortada tek satır.
+            Linkler altı çizili + ok ikonlu: tıklanabilir olduğu ilk bakışta anlaşılır */}
+        <div className="mt-6 flex flex-col items-start gap-2 text-[11px] text-cream/40
+          md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-x-3 md:gap-y-1">
           <span>Geliştirici &amp; Tasarım: Alperen Uçum</span>
-          <span aria-hidden="true" className="hidden md:inline">·</span>
+          <span aria-hidden="true" className="hidden md:inline text-cream/25">·</span>
           <a
             href="https://www.instagram.com/alperenucm"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-rosegold"
+            className="inline-flex items-center gap-1.5 text-rosegold/80 underline
+              decoration-rosegold/40 underline-offset-4 transition-colors
+              hover:text-rosegold hover:decoration-rosegold"
           >
-            <Instagram size={11} /> alperenucm
+            <Instagram size={12} /> alperenucm
+            <ExternalLink size={10} className="opacity-70" />
           </a>
-          <span aria-hidden="true" className="hidden md:inline">·</span>
+          <span aria-hidden="true" className="hidden md:inline text-cream/25">·</span>
           <a
             href="https://wa.me/905388525320"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-rosegold"
+            className="inline-flex items-center gap-1.5 text-rosegold/80 underline
+              decoration-rosegold/40 underline-offset-4 transition-colors
+              hover:text-rosegold hover:decoration-rosegold"
           >
-            <MessageCircle size={11} /> 0538 852 53 20
+            <MessageCircle size={12} /> WhatsApp: 0538 852 53 20
+            <ExternalLink size={10} className="opacity-70" />
           </a>
         </div>
       </div>

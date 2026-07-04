@@ -53,7 +53,9 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
               priority={active === 0}
               quality={95}
               sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-500 lg:group-hover:scale-[1.03]"
+              // object-contain: fotoğraf hangi oranda olursa olsun KIRPILMADAN
+              // tamamı görünür (kenarlarda zarif krem dolgu kalabilir)
+              className="object-contain transition-transform duration-500 lg:group-hover:scale-[1.03]"
               draggable={false}
             />
           </motion.div>

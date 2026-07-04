@@ -5,7 +5,7 @@
  * Instagram paylaşım, favori, açıklama akordeonları.
  * Seçilen renk/beden WhatsApp mesajına otomatik eklenir.
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Heart, MessageCircle, Instagram, ChevronDown, Check, Share2 } from "lucide-react";
 import { formatPrice } from "@/lib/site";
@@ -57,9 +57,16 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
   const inWishlist = isInWishlist(product.id);
   const settings = useSiteSettings();
 
+  // WhatsApp mesajına giden ürün linki, ziyaretçinin O AN baktığı adresten
+  // alınır — böylece site hangi alan adında yayındaysa link hep doğru olur
+  const [liveUrl, setLiveUrl] = useState(productUrl);
+  useEffect(() => {
+    setLiveUrl(window.location.origin + window.location.pathname);
+  }, []);
+
   const whatsappLink = buildProductOrderLink({
     productName: product.name,
-    productUrl,
+    productUrl: liveUrl,
     color,
     size,
     whatsappNumber: settings.whatsappNumber,
@@ -69,14 +76,14 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
   async function shareToInstagram() {
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
-        await navigator.share({ title: product.name, url: productUrl });
+        await navigator.share({ title: product.name, url: liveUrl });
         return;
       } catch {
         /* kullanıcı iptal etti — sorun değil */
       }
     }
     try {
-      await navigator.clipboard.writeText(productUrl);
+      await navigator.clipboard.writeText(liveUrl);
       setShared(true);
       setTimeout(() => setShared(false), 2500);
     } catch {
