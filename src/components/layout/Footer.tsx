@@ -1,8 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Instagram, Phone, Mail, MapPin, MessageCircle, ExternalLink } from "lucide-react";
 import { SITE, DEFAULT_SETTINGS, instagramUrlOf } from "@/lib/site";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
-import { SiteQr } from "@/components/ui/SiteQr";
 import type { Category, SiteSettings } from "@/types";
 
 export function Footer({
@@ -21,8 +21,13 @@ export function Footer({
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Marka */}
           <div>
-            <p className="font-display text-2xl text-cream">Gültenim</p>
-            <p className="text-[10px] uppercase tracking-luxe text-rosegold mt-1 mb-5">Butik</p>
+            <Image
+              src="/logo-plaka.png"
+              alt="Gültenim Boutique"
+              width={1200}
+              height={302}
+              className="mb-5 h-12 w-auto rounded-[3px]"
+            />
             <p className="text-sm leading-relaxed text-cream/60">
               Selvi Çetin ve İnvee koleksiyonlarıyla zarafeti buluşturan premium
               tesettür giyim. Siparişleriniz WhatsApp ve Instagram üzerinden
@@ -126,10 +131,6 @@ export function Footer({
               </li>
             </ul>
 
-            {/* Zarif QR — telefonla okutunca site açılır */}
-            <div className="mt-6 text-rosegold/70">
-              <SiteQr size={116} caption="Kamerayla okutun, site açılsın" />
-            </div>
           </div>
         </div>
 

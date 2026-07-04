@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, User, Menu, Search, ChevronDown } from "lucide-react";
+import { Heart, User, Menu, Search, ChevronDown, QrCode } from "lucide-react";
 import type { Category } from "@/types";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { useAuth } from "@/context/AuthContext";
@@ -12,12 +13,14 @@ import { useWishlist } from "@/context/WishlistContext";
 import { MegaMenu } from "./MegaMenu";
 import { SearchBar } from "./SearchBar";
 import { MobileNav } from "./MobileNav";
+import { QrModal } from "@/components/ui/QrModal";
 
 export function Header({ categories }: { categories: Category[] }) {
   const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const pathname = usePathname();
   const { user } = useAuth();
   const { count } = useWishlist();
@@ -35,6 +38,7 @@ export function Header({ categories }: { categories: Category[] }) {
     setMegaOpen(false);
     setSearchOpen(false);
     setMobileOpen(false);
+    setQrOpen(false);
   }, [pathname]);
 
   const navLink =
@@ -69,13 +73,15 @@ export function Header({ categories }: { categories: Category[] }) {
             </button>
 
             {/* Logo */}
-            <Link href="/" className="group flex flex-col items-center lg:items-start">
-              <span className="font-display text-2xl md:text-[1.7rem] leading-none text-bordeaux">
-                Gültenim
-              </span>
-              <span className="text-[10px] uppercase tracking-luxe text-rosegold-dark mt-1 transition-colors group-hover:text-bordeaux">
-                Butik
-              </span>
+            <Link href="/" className="shrink-0" aria-label="Gültenim Boutique — Ana Sayfa">
+              <Image
+                src="/logo-plaka.png"
+                alt="Gültenim Boutique"
+                width={1200}
+                height={302}
+                priority
+                className="h-8 w-auto sm:h-9 md:h-10"
+              />
             </Link>
 
             {/* Masaüstü navigasyon */}
@@ -108,7 +114,17 @@ export function Header({ categories }: { categories: Category[] }) {
             </nav>
 
             {/* Sağ ikonlar */}
-            <div className="flex items-center gap-1 sm:gap-2">
+            <div className="flex items-center gap-0.5 sm:gap-2">
+              {/* QR paylaşım — tıklanınca zarif pencere açılır */}
+              <button
+                onClick={() => setQrOpen(true)}
+                className="p-2.5 text-bordeaux/80 transition-colors hover:text-rosegold-dark"
+                aria-label="Siteyi QR kod ile paylaş"
+                title="QR ile paylaş"
+              >
+                <QrCode size={20} strokeWidth={1.5} />
+              </button>
+
               <button
                 onClick={() => setSearchOpen(true)}
                 className="p-2.5 text-bordeaux/80 transition-colors hover:text-rosegold-dark"
@@ -160,6 +176,11 @@ export function Header({ categories }: { categories: Category[] }) {
       {/* Arama paneli */}
       <AnimatePresence>
         {searchOpen && <SearchBar onClose={() => setSearchOpen(false)} />}
+      </AnimatePresence>
+
+      {/* QR paylaşım penceresi */}
+      <AnimatePresence>
+        {qrOpen && <QrModal onClose={() => setQrOpen(false)} />}
       </AnimatePresence>
 
       {/* Mobil menü çekmecesi */}

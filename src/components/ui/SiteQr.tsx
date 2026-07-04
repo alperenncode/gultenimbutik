@@ -1,13 +1,11 @@
 import QRCode from "qrcode";
+import Image from "next/image";
 import { SITE } from "@/lib/site";
 
 /**
- * Marka renklerinde zarif QR kod — ortasında Gültenim monogramı.
+ * Marka renklerinde zarif QR kod — ortasında Gültenim Boutique logosu.
  * Sunucuda SVG olarak üretilir (ek istek yok, her ekranda net görünür).
- * Hata düzeltme seviyesi H: ortadaki logo kodun okunmasını engellemez.
- *
- * tone="light": krem zemin üzerinde bordo modüller (açık alanlar için)
- * tone="dark":  bordo zemin (footer) üzerinde krem kart içinde gösterim
+ * Hata düzeltme seviyesi H: ortadaki logo şeridi kodun okunmasını engellemez.
  */
 export async function SiteQr({
   size = 120,
@@ -39,23 +37,24 @@ export async function SiteQr({
           className="h-full w-full [&_svg]:h-full [&_svg]:w-full"
           dangerouslySetInnerHTML={{ __html: svg }}
         />
-        {/* Ortadaki monogram — logo alanı */}
+        {/* Ortadaki logo şeridi */}
         <span
-          className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2
-            items-center justify-center rounded-full border border-rosegold/50 bg-cream
-            font-display italic text-bordeaux shadow-soft"
-          style={{
-            width: Math.round(size * 0.26),
-            height: Math.round(size * 0.26),
-            fontSize: Math.round(size * 0.15),
-          }}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+            overflow-hidden rounded-[4px] shadow-soft"
+          style={{ width: Math.round(size * 0.42) }}
         >
-          G
+          <Image
+            src="/logo-plaka.png"
+            alt=""
+            width={1200}
+            height={302}
+            className="h-auto w-full"
+          />
         </span>
         <span className="sr-only">Gültenim Butik sitesine giden QR kod: {url}</span>
       </div>
       {caption && (
-        <p className="max-w-[160px] text-center text-[10px] uppercase tracking-luxe text-current">
+        <p className="max-w-[170px] text-center text-[10px] uppercase tracking-luxe text-current">
           {caption}
         </p>
       )}

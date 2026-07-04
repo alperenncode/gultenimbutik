@@ -1,16 +1,25 @@
 /**
  * Yönetim paneline admin ekler (Firestore admins koleksiyonu).
- * Kullanım: node scripts/add-admin.mjs eposta@ornek.com
+ * İkinci argüman olarak şifre verilirse Auth kullanıcısını da oluşturur
+ * (kullanıcı zaten varsa şifresini o değere günceller).
+ *
+ * Kullanım: node scripts/add-admin.mjs eposta@ornek.com [şifre]
  * Gereksinim: .env.local içinde FIREBASE_SERVICE_ACCOUNT_KEY
  */
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { initializeApp, cert } from "firebase-admin/app";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import { getAuth } from "firebase-admin/auth";
 
 const email = process.argv[2]?.trim().toLowerCase();
+const password = process.argv[3];
 if (!email || !email.includes("@")) {
-  console.error("Kullanım: node scripts/add-admin.mjs eposta@ornek.com");
+  console.error("Kullanım: node scripts/add-admin.mjs eposta@ornek.com [şifre]");
+  process.exit(1);
+}
+if (password && password.length < 6) {
+  console.error("Şifre en az 6 karakter olmalı.");
   process.exit(1);
 }
 
@@ -30,9 +39,26 @@ if (!raw) {
 const json = raw.trim().startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8");
 initializeApp({ credential: cert(JSON.parse(json)) });
 
+// Şifre verildiyse Auth kullanıcısını oluştur/güncelle
+if (password) {
+  const auth = getAuth();
+  try {
+    const existing = await auth.getUserByEmail(email);
+    await auth.updateUser(existing.uid, { password });
+    console.log(`✓ Kullanıcı zaten vardı, şifresi güncellendi: ${email}`);
+  } catch (err) {
+    if (err.code === "auth/user-not-found") {
+      await auth.createUser({ email, password, emailVerified: false });
+      console.log(`✓ Auth kullanıcısı oluşturuldu: ${email}`);
+    } else {
+      throw err;
+    }
+  }
+}
+
 await getFirestore().collection("admins").doc(email).set({
   role: "admin",
   addedAt: Timestamp.now(),
 });
 console.log(`✓ Admin eklendi: ${email}`);
-console.log("Bu e-postayla sitede üye olduktan sonra /admin/login'den panele girilebilir.");
+console.log("Artık /admin/login sayfasından panele girebilir (2 adımlı doğrulama e-postasına gelir).");

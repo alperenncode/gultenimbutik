@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
 import { SITE } from "@/lib/site";
 import { PwaRegister } from "@/components/ui/PwaRegister";
+import { SecurityGuard } from "@/components/ui/SecurityGuard";
 import "./globals.css";
 
 // preload: false — tarayıcı yalnızca gerçekten kullanılan font dosyalarını
@@ -77,6 +78,7 @@ export default function RootLayout({
       <body>
         {children}
         <PwaRegister />
+        <SecurityGuard />
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { X, ChevronDown, Instagram, Phone } from "lucide-react";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
@@ -40,12 +41,13 @@ export function MobileNav({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-rosegold/15">
-          <div>
-            <span className="font-display text-xl text-bordeaux">Gültenim</span>
-            <span className="ml-2 text-[10px] uppercase tracking-luxe text-rosegold-dark">
-              Butik
-            </span>
-          </div>
+          <Image
+            src="/logo-plaka.png"
+            alt="Gültenim Boutique"
+            width={1200}
+            height={302}
+            className="h-8 w-auto rounded-[3px]"
+          />
           <button onClick={onClose} className="p-2 text-bordeaux/70" aria-label="Menüyü kapat">
             <X size={22} />
           </button>

@@ -35,6 +35,16 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ── Anlık varlık sinyali (şu an sitede kim var) ──
+    // Ziyaretçi yalnızca kendi oturum dokümanına, yalnızca sunucu saatiyle
+    // "lastSeen" yazabilir. Okuma/silme sadece admin (panel sayar + temizler).
+    match /presence/{sessionId} {
+      allow read: if isAdmin();
+      allow create, update: if request.resource.data.keys().hasOnly(['lastSeen'])
+        && request.resource.data.lastSeen == request.time;
+      allow delete: if isAdmin();
+    }
+
     // ── Ziyaretçi sayacı ──
     // Herkes sayacı yalnızca 1 artırabilir (total alanı tam +1 olmalı);
     // okumak sadece admin'e açıktır (panelde gösterilir).
