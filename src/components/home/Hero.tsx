@@ -2,7 +2,8 @@
 
 /**
  * Hero — tam genişlik, zarif tipografi ve katmanlı giriş animasyonları.
- * Görsel varsa sağda sergilenir; yoksa dekoratif zemin tek başına da şık durur.
+ * Sağ tarafta ürün fotoğrafı yerine marka logosu; yumuşak bir madalyon
+ * içinde hafifçe süzülerek (float) sergilenir.
  */
 import Link from "next/link";
 import Image from "next/image";
@@ -20,7 +21,7 @@ const fadeUp = {
   }),
 };
 
-export function Hero({ imageUrl }: { imageUrl?: string }) {
+export function Hero() {
   const settings = useSiteSettings();
   return (
     <section className="relative overflow-hidden bg-cream">
@@ -31,6 +32,26 @@ export function Hero({ imageUrl }: { imageUrl?: string }) {
         rounded-full border border-rosegold/10" />
       <div className="pointer-events-none absolute -left-52 bottom-0 h-[400px] w-[400px]
         rounded-full bg-rosegold/5" />
+
+      {/* İnce dantel/tül hissi veren nokta dokusu — çok düşük opaklıkta, tüm bölüme yayılır */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.4]"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(212,175,136,0.5) 1px, transparent 1.6px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+
+      {/* Yavaşça nefes alan altın ışık */}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[560px] w-[560px]
+          -translate-x-1/2 -translate-y-1/2 rounded-full bg-rosegold/10 blur-3xl"
+        animate={{ scale: [1, 1.15, 1], opacity: [0.45, 0.75, 0.45] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid min-h-[78vh] grid-cols-1 items-center gap-12 py-16 lg:grid-cols-2 lg:py-0">
@@ -96,35 +117,58 @@ export function Hero({ imageUrl }: { imageUrl?: string }) {
             </motion.div>
           </div>
 
-          {/* Görsel */}
+          {/* Logo madalyonu */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: [0.21, 0.65, 0.36, 1] }}
-            className="relative hidden lg:block"
+            className="relative hidden lg:flex items-center justify-center"
           >
-            <div className="relative mx-auto aspect-[3/4] max-w-md overflow-hidden">
-              {imageUrl ? (
+            <div className="relative flex aspect-square w-full max-w-md items-center
+              justify-center rounded-full bg-gradient-to-br from-rosegold-light/40
+              via-cream-dark/50 to-rosegold/25">
+              {/* Yavaşça dönen ince halka */}
+              <motion.div
+                aria-hidden="true"
+                className="absolute inset-6 rounded-full border border-rosegold/30"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 44, repeat: Infinity, ease: "linear" }}
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-14 rounded-full border border-dashed border-rosegold/20"
+              />
+
+              {/* Logo — hafifçe yukarı aşağı süzülür */}
+              <motion.div
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="relative z-10 w-[76%]"
+              >
                 <Image
-                  src={imageUrl}
-                  alt="Gültenim Butik yeni sezon"
-                  fill
+                  src="/logo-plaka.png"
+                  alt="Gültenim Boutique"
+                  width={1200}
+                  height={302}
                   priority
-                  quality={90}
-                  sizes="(max-width: 1024px) 0px, 448px"
-                  className="object-cover"
+                  className="h-auto w-full drop-shadow-[0_20px_45px_rgba(44,26,26,0.18)]"
                 />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br
-                  from-cream-dark via-rosegold-light/40 to-rosegold/30">
-                  <span className="font-display text-[10rem] italic text-bordeaux/10">G</span>
-                </div>
-              )}
-              {/* Çerçeve detayı */}
-              <div className="pointer-events-none absolute inset-4 border border-cream/60" />
+              </motion.div>
+
+              {/* Zarif parıltı noktaları */}
+              <motion.span
+                aria-hidden="true"
+                className="absolute right-10 top-12 h-2 w-2 rounded-full bg-rosegold"
+                animate={{ opacity: [0.2, 1, 0.2] }}
+                transition={{ duration: 2.4, repeat: Infinity }}
+              />
+              <motion.span
+                aria-hidden="true"
+                className="absolute left-12 bottom-16 h-1.5 w-1.5 rounded-full bg-rosegold-dark"
+                animate={{ opacity: [0.15, 0.9, 0.15] }}
+                transition={{ duration: 3.1, repeat: Infinity, delay: 0.6 }}
+              />
             </div>
-            {/* Arka plan aksan bloğu */}
-            <div className="absolute -bottom-6 -right-2 -z-10 h-2/3 w-2/3 bg-rosegold/15" />
           </motion.div>
         </div>
       </div>

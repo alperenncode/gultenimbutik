@@ -30,13 +30,10 @@ export default async function HomePage() {
   // yorumları birlikte gösterilir; bileşen ilk 6 tanesini alır
   const combinedTestimonials = [...productReviews, ...testimonials];
 
-  // Hero görseli: lookbook'un ilk görseli, yoksa ilk yeni ürünün görseli
-  const heroImage = lookbook[0]?.imageUrl ?? newProducts[0]?.images?.[0];
-
   // Sıralama: Popüler Ürünler ve Stil Önerileri sayfanın ÜST kısmında
   return (
     <>
-      <Hero imageUrl={heroImage} />
+      <Hero />
       <ProductShowcase
         subtitle="Çok Beğenilenler"
         title="Popüler Ürünler"

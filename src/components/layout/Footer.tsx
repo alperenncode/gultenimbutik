@@ -18,7 +18,7 @@ export function Footer({
   return (
     <footer className="bg-bordeaux text-cream/80">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-4 lg:gap-12">
           {/* Marka */}
           <div>
             <Image
@@ -57,80 +57,91 @@ export function Footer({
             </div>
           </div>
 
-          {/* Koleksiyon */}
-          <div>
-            <p className="text-xs uppercase tracking-luxe text-rosegold mb-5">Koleksiyon</p>
-            <ul className="space-y-3 text-sm">
-              {categories.slice(0, 6).map((cat) => (
-                <li key={cat.id}>
-                  <Link
-                    href={`/kategori/${cat.slug}`}
-                    className="text-cream/60 transition-colors hover:text-rosegold"
-                  >
-                    {cat.name}
+          {/* Koleksiyon / Kurumsal / İletişim — mobilde de yan yana 3 sütun */}
+          <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:col-span-3 lg:grid-cols-3 lg:gap-12">
+            {/* Koleksiyon */}
+            <div>
+              <p className="text-[10px] uppercase tracking-luxe text-rosegold mb-4 sm:text-xs sm:mb-5">
+                Koleksiyon
+              </p>
+              <ul className="space-y-2 text-[11px] leading-snug sm:space-y-3 sm:text-sm">
+                {categories.slice(0, 6).map((cat) => (
+                  <li key={cat.id}>
+                    <Link
+                      href={`/kategori/${cat.slug}`}
+                      className="text-cream/60 transition-colors hover:text-rosegold"
+                    >
+                      {cat.name}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link href="/urunler" className="text-cream/60 transition-colors hover:text-rosegold">
+                    Tüm Ürünler
                   </Link>
                 </li>
-              ))}
-              <li>
-                <Link href="/urunler" className="text-cream/60 transition-colors hover:text-rosegold">
-                  Tüm Ürünler
-                </Link>
-              </li>
-            </ul>
-          </div>
+              </ul>
+            </div>
 
-          {/* Kurumsal — gizlilik ve güvenlik en üstte */}
-          <div>
-            <p className="text-xs uppercase tracking-luxe text-rosegold mb-5">Kurumsal</p>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <Link href="/gizlilik-politikasi" className="text-cream/60 transition-colors hover:text-rosegold">
-                  Gizlilik Politikası (KVKK)
-                </Link>
-              </li>
-              <li>
-                <Link href="/kullanim-kosullari" className="text-cream/60 transition-colors hover:text-rosegold">
-                  Kullanım Koşulları
-                </Link>
-              </li>
-              <li>
-                <Link href="/hakkimizda" className="text-cream/60 transition-colors hover:text-rosegold">
-                  Hakkımızda
-                </Link>
-              </li>
-              <li>
-                <Link href="/iletisim" className="text-cream/60 transition-colors hover:text-rosegold">
-                  İletişim
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* Kurumsal — gizlilik ve güvenlik en üstte */}
+            <div>
+              <p className="text-[10px] uppercase tracking-luxe text-rosegold mb-4 sm:text-xs sm:mb-5">
+                Kurumsal
+              </p>
+              <ul className="space-y-2 text-[11px] leading-snug sm:space-y-3 sm:text-sm">
+                <li>
+                  <Link href="/gizlilik-politikasi" className="text-cream/60 transition-colors hover:text-rosegold">
+                    Gizlilik Politikası (KVKK)
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/kullanim-kosullari" className="text-cream/60 transition-colors hover:text-rosegold">
+                    Kullanım Koşulları
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/hakkimizda" className="text-cream/60 transition-colors hover:text-rosegold">
+                    Hakkımızda
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/iletisim" className="text-cream/60 transition-colors hover:text-rosegold">
+                    İletişim
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* İletişim + QR */}
-          <div>
-            <p className="text-xs uppercase tracking-luxe text-rosegold mb-5">İletişim</p>
-            <ul className="space-y-4 text-sm text-cream/60">
-              <li className="flex gap-3">
-                <Phone size={16} className="mt-0.5 shrink-0 text-rosegold" />
-                <a
-                  href={`tel:+${settings.whatsappNumber}`}
-                  className="hover:text-rosegold transition-colors"
-                >
-                  {settings.phoneDisplay}
-                </a>
-              </li>
-              <li className="flex gap-3">
-                <Mail size={16} className="mt-0.5 shrink-0 text-rosegold" />
-                <a href={`mailto:${settings.email}`} className="hover:text-rosegold transition-colors">
-                  {settings.email}
-                </a>
-              </li>
-              <li className="flex gap-3">
-                <MapPin size={16} className="mt-0.5 shrink-0 text-rosegold" />
-                <span>{settings.address}</span>
-              </li>
-            </ul>
-
+            {/* İletişim */}
+            <div>
+              <p className="text-[10px] uppercase tracking-luxe text-rosegold mb-4 sm:text-xs sm:mb-5">
+                İletişim
+              </p>
+              <ul className="space-y-3 text-[11px] leading-snug text-cream/60 sm:space-y-4 sm:text-sm">
+                <li className="flex gap-1.5 sm:gap-3">
+                  <Phone size={13} className="mt-0.5 shrink-0 text-rosegold sm:hidden" />
+                  <Phone size={16} className="mt-0.5 hidden shrink-0 text-rosegold sm:block" />
+                  <a
+                    href={`tel:+${settings.whatsappNumber}`}
+                    className="break-words hover:text-rosegold transition-colors"
+                  >
+                    {settings.phoneDisplay}
+                  </a>
+                </li>
+                <li className="flex gap-1.5 sm:gap-3">
+                  <Mail size={13} className="mt-0.5 shrink-0 text-rosegold sm:hidden" />
+                  <Mail size={16} className="mt-0.5 hidden shrink-0 text-rosegold sm:block" />
+                  <a href={`mailto:${settings.email}`} className="break-all hover:text-rosegold transition-colors">
+                    {settings.email}
+                  </a>
+                </li>
+                <li className="flex gap-1.5 sm:gap-3">
+                  <MapPin size={13} className="mt-0.5 shrink-0 text-rosegold sm:hidden" />
+                  <MapPin size={16} className="mt-0.5 hidden shrink-0 text-rosegold sm:block" />
+                  <span className="break-words">{settings.address}</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
