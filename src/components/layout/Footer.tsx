@@ -8,7 +8,7 @@ export function Footer({ categories }: { categories: Category[] }) {
   return (
     <footer className="bg-bordeaux text-cream/80">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Marka */}
           <div>
             <p className="font-display text-2xl text-cream">Gültenim</p>

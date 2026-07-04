@@ -27,7 +27,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex w-full min-w-0 flex-col gap-4">
       {/* Ana görsel — dokununca tam ekran açılır */}
       <button
         type="button"
@@ -75,7 +75,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
 
       {/* Thumbnail rayı */}
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-1">
+        <div className="flex max-w-full gap-3 overflow-x-auto pb-1">
           {images.map((img, i) => (
             <button
               key={i}

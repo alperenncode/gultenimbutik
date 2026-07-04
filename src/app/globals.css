@@ -5,10 +5,26 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Yatay taşma emniyeti: herhangi bir öğe ekrandan taşsa bile
+       sayfa yana kaymaz. `clip` sticky header'ı bozmaz; eski
+       tarayıcılar ilk satırdaki `hidden` değerini kullanır. */
+    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   body {
     @apply bg-cream text-bordeaux font-sans antialiased;
+    overflow-x: clip;
+  }
+
+  /* Uzun kelimeler (e-posta, link, uzun ürün adı) kutularından taşmasın */
+  h1, h2, h3, p, a, span, td {
+    overflow-wrap: break-word;
+  }
+
+  /* Görsel ve medya öğeleri asla kapsayıcılarından geniş olamaz */
+  img, svg, video, iframe {
+    max-width: 100%;
   }
 
   ::selection {

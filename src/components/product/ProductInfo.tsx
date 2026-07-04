@@ -86,7 +86,7 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
     <div className="flex flex-col">
       {/* Marka + isim + fiyat */}
       <p className="text-[11px] uppercase tracking-luxe text-rosegold-dark">{product.brand}</p>
-      <h1 className="mt-2 font-display text-3xl leading-tight text-bordeaux md:text-4xl">
+      <h1 className="mt-2 break-words font-display text-3xl leading-tight text-bordeaux md:text-4xl">
         {product.name}
       </h1>
 

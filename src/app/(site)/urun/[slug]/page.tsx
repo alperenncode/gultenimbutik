@@ -58,21 +58,22 @@ export default async function ProductPage({ params }: Props) {
           className="mb-8 flex items-center gap-1.5 text-xs text-bordeaux/50"
           aria-label="Sayfa yolu"
         >
-          <Link href="/" className="hover:text-rosegold-dark transition-colors">
+          <Link href="/" className="shrink-0 hover:text-rosegold-dark transition-colors">
             Ana Sayfa
           </Link>
-          <ChevronRight size={12} />
+          <ChevronRight size={12} className="shrink-0" />
           <Link
             href={`/kategori/${product.categorySlug}`}
-            className="hover:text-rosegold-dark transition-colors"
+            className="shrink-0 hover:text-rosegold-dark transition-colors"
           >
             {product.categorySlug ? product.categorySlug.replace(/-/g, " ") : "Koleksiyon"}
           </Link>
-          <ChevronRight size={12} />
-          <span className="text-bordeaux/80 line-clamp-1">{product.name}</span>
+          <ChevronRight size={12} className="shrink-0" />
+          <span className="min-w-0 truncate text-bordeaux/80">{product.name}</span>
         </nav>
 
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+        {/* grid-cols-1 şart: minmax(0,1fr) sayesinde thumbnail rayı kolonu ekrandan geniş yapamaz */}
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
           <ProductGallery images={product.images} name={product.name} />
           <ProductInfo product={product} productUrl={productUrl} />
         </div>

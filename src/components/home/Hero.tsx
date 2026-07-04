@@ -31,7 +31,7 @@ export function Hero({ imageUrl }: { imageUrl?: string }) {
         rounded-full bg-rosegold/5" />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid min-h-[78vh] items-center gap-12 py-16 lg:grid-cols-2 lg:py-0">
+        <div className="grid min-h-[78vh] grid-cols-1 items-center gap-12 py-16 lg:grid-cols-2 lg:py-0">
           {/* Metin */}
           <div className="relative z-10 text-center lg:text-left">
             <motion.p

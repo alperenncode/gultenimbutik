@@ -80,7 +80,7 @@ export function AccountTabs() {
             Hoş geldiniz{profile?.displayName ? `, ${profile.displayName}` : ""}
           </h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           {isAdmin && (
             <Link
               href="/admin"
@@ -163,7 +163,7 @@ export function AccountTabs() {
               </div>
               <div>
                 <dt className="input-label">E-posta</dt>
-                <dd className="text-sm text-bordeaux">{user.email}</dd>
+                <dd className="break-all text-sm text-bordeaux">{user.email}</dd>
               </div>
               <div>
                 <dt className="input-label">Favori Sayısı</dt>
