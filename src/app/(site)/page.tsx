@@ -9,20 +9,26 @@ import {
   getPopularProducts,
   getLookbook,
   getTestimonials,
+  getApprovedReviewsAsTestimonials,
 } from "@/lib/data";
 
 // Ana sayfa 5 dakikada bir yeniden oluşturulur (ISR) — admin değişiklikleri hızlı yansır
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [categories, newProducts, popularProducts, lookbook, testimonials] =
+  const [categories, newProducts, popularProducts, lookbook, testimonials, productReviews] =
     await Promise.all([
       getCategories(),
       getNewProducts(8),
       getPopularProducts(8),
       getLookbook(),
       getTestimonials(),
+      getApprovedReviewsAsTestimonials(6),
     ]);
+
+  // "Sizden Gelenler": onaylı ürün yorumları (en yeniler) + elle eklenen vitrin
+  // yorumları birlikte gösterilir; bileşen ilk 6 tanesini alır
+  const combinedTestimonials = [...productReviews, ...testimonials];
 
   // Hero görseli: lookbook'un ilk görseli, yoksa ilk yeni ürünün görseli
   const heroImage = lookbook[0]?.imageUrl ?? newProducts[0]?.images?.[0];
@@ -45,7 +51,7 @@ export default async function HomePage() {
         viewAllHref="/urunler"
         tinted
       />
-      <Testimonials testimonials={testimonials} />
+      <Testimonials testimonials={combinedTestimonials} />
     </>
   );
 }

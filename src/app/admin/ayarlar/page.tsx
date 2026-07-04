@@ -7,6 +7,7 @@
  */
 import { useEffect, useState } from "react";
 import { Loader2, Save, CheckCircle2 } from "lucide-react";
+import { HelpTip } from "@/components/admin/HelpTip";
 import type { SiteSettings } from "@/types";
 import { fetchSiteSettingsClient, saveSiteSettings } from "@/lib/firestore/settings";
 
@@ -71,7 +72,28 @@ export default function AdminSettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="font-display text-2xl text-bordeaux">Site Ayarları</h1>
+        <h1 className="flex items-center gap-2 font-display text-2xl text-bordeaux">
+          Site Ayarları
+          <HelpTip title="Site Ayarları Neyi Değiştirir?">
+            <p>
+              Buradaki bilgiler sitenin <strong>her yerinde</strong> otomatik kullanılır —
+              tek yerden değiştirirsiniz, her yer güncellenir:
+            </p>
+            <ul>
+              <li><strong>Telefon &amp; WhatsApp:</strong> Üst duyuru, alt bilgi (footer),
+                iletişim sayfası ve tüm &ldquo;WhatsApp&apos;tan Sipariş Ver&rdquo; butonları.</li>
+              <li><strong>Instagram:</strong> Sağ alttaki yüzen buton, footer ve iletişim sayfası.</li>
+              <li><strong>E-posta &amp; Adres:</strong> Footer ve iletişim sayfası.</li>
+              <li><strong>Duyuru şeridi:</strong> Her sayfanın en üstündeki bordo şerit.</li>
+              <li><strong>Hakkımızda:</strong> Hakkımızda sayfasının tamamı.</li>
+            </ul>
+            <p>
+              Değişiklikler kaydettikten sonra sitede <strong>en geç 10 dakika</strong>{" "}
+              içinde görünür. Her bölümün yanındaki <strong>?</strong> işaretinden ayrıntılı
+              açıklama okuyabilirsiniz.
+            </p>
+          </HelpTip>
+        </h1>
         <p className="mt-1 text-sm text-bordeaux/50">
           İletişim bilgileri, duyuru şeridi ve Hakkımızda içeriği — değişiklikler
           sitede en geç 10 dakika içinde görünür
@@ -81,9 +103,32 @@ export default function AdminSettingsPage() {
       <form onSubmit={onSubmit} className="max-w-3xl space-y-10">
         {/* İletişim bilgileri */}
         <section>
-          <h2 className="mb-4 border-b border-rosegold/20 pb-2 text-sm font-medium
-            uppercase tracking-wider text-bordeaux">
+          <h2 className="mb-4 flex items-center gap-2 border-b border-rosegold/20 pb-2
+            text-sm font-medium uppercase tracking-wider text-bordeaux">
             İletişim Bilgileri
+            <HelpTip title="İletişim Bilgileri — Alan Alan Açıklama">
+              <ul>
+                <li>
+                  <strong>Görünen Telefon:</strong> Müşterilerin sitede okuyacağı
+                  biçim, ör. <strong>0533 285 36 39</strong>. İstediğiniz gibi boşluk
+                  koyabilirsiniz.
+                </li>
+                <li>
+                  <strong>WhatsApp Numarası (teknik):</strong> Sipariş butonlarının
+                  arka planda kullandığı numaradır. <strong>90 ile başlamalı ve boşluksuz
+                  12 rakam</strong> olmalı, ör. <strong>905332853639</strong>. Yanlış yazılırsa
+                  müşterinin WhatsApp mesajı yanlış numaraya gider — kaydettikten sonra
+                  sitedeki butonu bir kez deneyin.
+                </li>
+                <li>
+                  <strong>Instagram Kullanıcı Adı:</strong> @ işareti olmadan yazın,
+                  ör. <strong>gultenim_boutique</strong>.
+                </li>
+                <li>
+                  <strong>E-posta ve Adres:</strong> Footer ve İletişim sayfasında görünür.
+                </li>
+              </ul>
+            </HelpTip>
           </h2>
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
@@ -140,9 +185,25 @@ export default function AdminSettingsPage() {
 
         {/* Duyuru şeridi */}
         <section>
-          <h2 className="mb-4 border-b border-rosegold/20 pb-2 text-sm font-medium
-            uppercase tracking-wider text-bordeaux">
+          <h2 className="mb-4 flex items-center gap-2 border-b border-rosegold/20 pb-2
+            text-sm font-medium uppercase tracking-wider text-bordeaux">
             Üst Duyuru Şeridi
+            <HelpTip title="Duyuru Şeridi Ne İşe Yarar?">
+              <p>
+                Sitenin en tepesindeki ince bordo şeritte yazan metindir ve{" "}
+                <strong>her sayfada</strong> görünür. Müşterinin gözüne ilk çarpan yer
+                olduğu için kampanya ve önemli duyurular için idealdir.
+              </p>
+              <p>Örnekler:</p>
+              <ul>
+                <li>&ldquo;Bayrama özel tüm takımlarda %20 indirim&rdquo;</li>
+                <li>&ldquo;500 TL üzeri siparişlerde kargo bedava&rdquo;</li>
+                <li>&ldquo;Yeni sezon ürünleri yüklendi — Koleksiyona göz atın&rdquo;</li>
+              </ul>
+              <p>
+                Kısa tutun (tek satır) — telefonda uzun metin iki satıra sarkar.
+              </p>
+            </HelpTip>
           </h2>
           <input
             value={settings.announcement}
@@ -157,9 +218,31 @@ export default function AdminSettingsPage() {
 
         {/* Hakkımızda */}
         <section>
-          <h2 className="mb-4 border-b border-rosegold/20 pb-2 text-sm font-medium
-            uppercase tracking-wider text-bordeaux">
+          <h2 className="mb-4 flex items-center gap-2 border-b border-rosegold/20 pb-2
+            text-sm font-medium uppercase tracking-wider text-bordeaux">
             Hakkımızda Sayfası
+            <HelpTip title="Hakkımızda Sayfası Nasıl Yazılır?">
+              <p>
+                Buraya yazdıklarınız sitenizin <strong>Hakkımızda</strong> sayfasında
+                aynen görünür.
+              </p>
+              <ul>
+                <li><strong>Başlık:</strong> Sayfanın en üstündeki büyük yazı
+                  (genelde mağaza adı).</li>
+                <li>
+                  <strong>Metin:</strong> Hikayeniz. <strong>Paragraf ayırmak için iki
+                  paragraf arasında bir boş satır bırakın</strong> — sitede ayrı
+                  paragraflar olarak, ferah şekilde gösterilir.
+                </li>
+                <li><strong>Alt Söz:</strong> Sayfanın sonunda tırnak içinde, el yazısı
+                  hissiyatında gösterilen kısa slogan (ör. &ldquo;Zarafet, detaylarda
+                  gizlidir.&rdquo;). Boş bırakırsanız hiç görünmez.</li>
+              </ul>
+              <p>
+                İpucu: Samimi anlatım güven verir — nasıl başladığınız, ürünleri
+                nasıl seçtiğiniz, siparişin nasıl işlediği güzel konulardır.
+              </p>
+            </HelpTip>
           </h2>
           <div className="space-y-5">
             <div>

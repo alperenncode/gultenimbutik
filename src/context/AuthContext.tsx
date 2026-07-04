@@ -18,15 +18,24 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  updatePassword,
+  updateEmail,
+  verifyBeforeUpdateEmail,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
   type User,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase-client";
 import {
   ensureUserProfile,
   fetchUserProfile,
+  updateUserEmail,
   checkIsAdmin,
 } from "@/lib/firestore/users";
 import type { UserProfile } from "@/types";
+
+/** E-posta değişikliği sonucu: hemen değişti mi, doğrulama linki mi gitti */
+export type EmailChangeResult = "updated" | "verification-sent";
 
 interface AuthContextValue {
   user: User | null;
@@ -37,6 +46,10 @@ interface AuthContextValue {
   signIn: (email: string, password: string) => Promise<void>;
   signOutUser: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  /** Mevcut şifre doğrulanır, sonra yeni şifre atanır */
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  /** Mevcut şifre doğrulanır; e-posta ya hemen değişir ya da doğrulama linki gönderilir */
+  changeEmail: (currentPassword: string, newEmail: string) => Promise<EmailChangeResult>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -54,6 +67,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       fetchUserProfile(u.uid),
       u.email ? checkIsAdmin(u.email) : Promise.resolve(false),
     ]);
+    // E-posta doğrulama linkiyle değiştiyse profil dokümanını eşitle
+    if (p && u.email && p.email !== u.email.toLowerCase()) {
+      updateUserEmail(u.uid, u.email.toLowerCase()).catch(() => {});
+      p.email = u.email.toLowerCase();
+    }
     setProfile(p);
     setIsAdmin(admin);
   }, []);
@@ -103,9 +121,63 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (user) await loadProfile(user);
   }, [user, loadProfile]);
 
+  /** Hassas işlemlerden önce mevcut şifreyle yeniden kimlik doğrulama (Firebase şartı) */
+  const reauthenticate = useCallback(async (currentPassword: string) => {
+    const u = auth.currentUser;
+    if (!u?.email) throw new Error("Oturum bulunamadı — yeniden giriş yapın.");
+    const credential = EmailAuthProvider.credential(u.email, currentPassword);
+    await reauthenticateWithCredential(u, credential);
+  }, []);
+
+  const changePassword = useCallback(
+    async (currentPassword: string, newPassword: string) => {
+      await reauthenticate(currentPassword);
+      const u = auth.currentUser;
+      if (!u) throw new Error("Oturum bulunamadı.");
+      await updatePassword(u, newPassword);
+    },
+    [reauthenticate]
+  );
+
+  const changeEmail = useCallback(
+    async (currentPassword: string, newEmail: string): Promise<EmailChangeResult> => {
+      await reauthenticate(currentPassword);
+      const u = auth.currentUser;
+      if (!u) throw new Error("Oturum bulunamadı.");
+      const normalized = newEmail.trim().toLowerCase();
+
+      try {
+        await updateEmail(u, normalized);
+      } catch (err) {
+        // Yeni Firebase projelerinde doğrudan değişiklik kapalıdır:
+        // yeni adrese doğrulama linki gönderilir, tıklanınca e-posta değişir
+        const code = (err as { code?: string })?.code;
+        if (code === "auth/operation-not-allowed") {
+          await verifyBeforeUpdateEmail(u, normalized);
+          return "verification-sent";
+        }
+        throw err;
+      }
+
+      // Firestore'daki profil dokümanını da eşitle (favoriler bozulmasın)
+      try {
+        await updateUserEmail(u.uid, normalized);
+      } catch {
+        /* profil eşitlemesi sonraki girişte loadProfile ile tamamlanır */
+      }
+      await loadProfile(u);
+      return "updated";
+    },
+    [reauthenticate, loadProfile]
+  );
+
   return (
     <AuthContext.Provider
-      value={{ user, profile, isAdmin, loading, signUp, signIn, signOutUser, refreshProfile }}
+      value={{
+        user, profile, isAdmin, loading,
+        signUp, signIn, signOutUser, refreshProfile,
+        changePassword, changeEmail,
+      }}
     >
       {children}
     </AuthContext.Provider>

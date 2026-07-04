@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Pencil, Trash2, Loader2, X, Save } from "lucide-react";
+import { HelpTip } from "@/components/admin/HelpTip";
 import { slugify } from "@/lib/utils";
 import type { Category } from "@/types";
 import {
@@ -44,7 +45,33 @@ export default function AdminCategoriesPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl text-bordeaux">Kategoriler</h1>
+          <h1 className="flex items-center gap-2 font-display text-2xl text-bordeaux">
+            Kategoriler
+            <HelpTip title="Kategori Yönetimi Nasıl Çalışır?">
+              <p>
+                Kategoriler, ürünlerinizi gruplara ayırır: Elbise, Takım, Dış Giyim
+                gibi. Sitede üç yerde görünürler:
+              </p>
+              <ul>
+                <li>Ana sayfadaki <strong>&ldquo;Size Özel Seçkiler&rdquo;</strong> kartları</li>
+                <li>Üst menüdeki <strong>Koleksiyon</strong> açılır menüsü</li>
+                <li>Ürünler sayfasındaki <strong>kategori filtresi</strong></li>
+              </ul>
+              <p><strong>Yeni kategori eklemek için:</strong></p>
+              <ol>
+                <li><strong>Yeni Kategori</strong> butonuna dokunun.</li>
+                <li>Adını yazın (ör. &ldquo;Tunik&rdquo;).</li>
+                <li>Güzel bir temsil fotoğrafı yükleyin — ana sayfa kartında bu görünür.</li>
+                <li><strong>Sıra</strong> numarası küçük olan önce gösterilir (1 en başta).</li>
+              </ol>
+              <p>
+                <strong>Dikkat — silme:</strong> İçinde ürün olan bir kategoriyi silerseniz
+                o ürünler kaybolmaz ama vitrinde kategorisiz kalır; ürünleri düzenleyip
+                yeni bir kategori seçmeniz gerekir. Silmeden önce ürünleri başka
+                kategoriye taşımak en temizidir.
+              </p>
+            </HelpTip>
+          </h1>
           <p className="mt-1 text-sm text-bordeaux/50">{categories.length} kategori</p>
         </div>
         <button onClick={() => setEditing("new")} className="btn-primary !py-2.5 text-xs">

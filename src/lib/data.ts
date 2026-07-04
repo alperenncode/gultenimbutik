@@ -164,6 +164,36 @@ export async function getTestimonials(): Promise<Testimonial[]> {
 }
 
 /**
+ * Onaylı ürün yorumları — ana sayfadaki "Sizden Gelenler" bölümünde
+ * vitrin yorumlarıyla birlikte gösterilmek üzere Testimonial biçimine çevrilir.
+ * En yeni yorumlar önce gelir.
+ */
+export async function getApprovedReviewsAsTestimonials(count = 6): Promise<Testimonial[]> {
+  return safeQuery(async () => {
+    const db = await getDb();
+    const snap = await db.collection("reviews").where("approved", "==", true).get();
+    return snap.docs
+      .map((doc) => {
+        const d = doc.data();
+        return {
+          review: {
+            id: `review-${doc.id}`,
+            name: d.name ?? "Müşteri",
+            quote: d.text ?? "",
+            rating: d.rating ?? 5,
+            order: 0,
+            isActive: true,
+          } as Testimonial,
+          createdAt: toMillis(d.createdAt),
+        };
+      })
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, count)
+      .map((x) => x.review);
+  }, "onaylı ürün yorumları");
+}
+
+/**
  * Site ayarları — settings/site dokümanı, varsayılanlarla birleştirilir.
  * Firestore'a ulaşılamazsa site sabitleriyle çalışmaya devam eder.
  */

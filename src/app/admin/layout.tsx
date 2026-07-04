@@ -17,6 +17,7 @@ import {
   MessageSquareQuote,
   Images,
   Settings,
+  KeyRound,
   LogOut,
   Loader2,
   ExternalLink,
@@ -81,6 +82,14 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             hover:text-cream transition-colors"
         >
           <ExternalLink size={17} strokeWidth={1.6} /> Siteyi Gör
+        </Link>
+        <Link
+          href="/hesabim?sekme=profil"
+          onClick={onNavigate}
+          className="flex items-center gap-3 px-3 py-2.5 text-sm text-cream/65
+            hover:text-cream transition-colors"
+        >
+          <KeyRound size={17} strokeWidth={1.6} /> Şifre / E-posta Değiştir
         </Link>
         <button
           onClick={async () => {

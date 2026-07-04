@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Pencil, Trash2, Loader2, X, Save } from "lucide-react";
+import { HelpTip } from "@/components/admin/HelpTip";
 import type { LookbookItem } from "@/types";
 import {
   fetchAllLookbookAdmin,
@@ -42,7 +43,30 @@ export default function AdminLookbookPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl text-bordeaux">Lookbook</h1>
+          <h1 className="flex items-center gap-2 font-display text-2xl text-bordeaux">
+            Lookbook
+            <HelpTip title="Lookbook Nedir, Nasıl Kullanılır?">
+              <p>
+                Lookbook, ana sayfadaki <strong>&ldquo;Stil Önerileri&rdquo;</strong> bölümüdür:
+                kombin ve ilham fotoğraflarınızı sergilediğiniz vitrin. Satış sayfası
+                değildir; müşteriye &ldquo;bu parçalar birlikte nasıl durur&rdquo; hissi verir.
+              </p>
+              <ul>
+                <li><strong>Yeni Görsel</strong> ile fotoğraf yüklersiniz; kısa bir{" "}
+                  <strong>açıklama</strong> yazarsanız fotoğrafın altında zarif bir metin görünür
+                  (ör. &ldquo;Sonbahar kombini&rdquo;).</li>
+                <li><strong>Sıra</strong> numarası küçük olan önce gösterilir; en güzel kare
+                  1 numara olsun — ana sayfanın en üstündeki büyük tanıtım görseli de
+                  buradaki ilk fotoğraftan gelir.</li>
+                <li>Ana sayfada <strong>en fazla 6 görsel</strong> gösterilir.</li>
+                <li><strong>Pasif</strong> yaptığınız görsel yayından kalkar ama silinmez.</li>
+              </ul>
+              <p>
+                Instagram&apos;da beğeni alan karelerinizi buraya taşımak ana sayfayı
+                hep taze tutar.
+              </p>
+            </HelpTip>
+          </h1>
           <p className="mt-1 text-sm text-bordeaux/50">
             Ana sayfadaki stil önerileri bölümü — ilk görsel büyük gösterilir
           </p>

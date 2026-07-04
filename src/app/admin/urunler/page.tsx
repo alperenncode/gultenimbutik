@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { HelpTip } from "@/components/admin/HelpTip";
 import { formatPrice } from "@/lib/site";
 import type { Product } from "@/types";
 import { fetchAllProductsAdmin, deleteProduct, updateProduct } from "@/lib/firestore/products";
@@ -50,7 +51,33 @@ export default function AdminProductsPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl text-bordeaux">Ürünler</h1>
+          <h1 className="flex items-center gap-2 font-display text-2xl text-bordeaux">
+            Ürünler
+            <HelpTip title="Ürün Yönetimi Nasıl Çalışır?">
+              <p>
+                Bu listede sitenizdeki <strong>tüm ürünler</strong> görünür — vitrinde
+                olanlar da, gizlediğiniz (pasif) ürünler de.
+              </p>
+              <p><strong>Yeni ürün eklemek için:</strong></p>
+              <ol>
+                <li>Sağ üstteki <strong>Yeni Ürün</strong> butonuna dokunun.</li>
+                <li>Açılan formda adını, kategorisini, fiyatını girin.</li>
+                <li>Fotoğraflarını yükleyin (ilk fotoğraf kapak olur).</li>
+                <li>En alttaki <strong>Ürünü Kaydet</strong> butonuna basın.</li>
+              </ol>
+              <p><strong>Listedeki işlemler:</strong></p>
+              <ul>
+                <li><strong>Aktif/Pasif etiketi:</strong> Üzerine dokununca ürün vitrinden gizlenir
+                  ya da geri gelir. Tükenen ürünü silmek yerine pasif yapmanızı öneririz —
+                  ürün geri gelince tek dokunuşla açarsınız.</li>
+                <li><strong>Kalem simgesi:</strong> Ürünü düzenler (fiyat, fotoğraf, açıklama…).</li>
+                <li><strong>Çöp kutusu simgesi:</strong> Ürünü kalıcı siler. Geri alınamaz!</li>
+              </ul>
+              <p>
+                Değişiklikler sitede en geç 10 dakika içinde görünür.
+              </p>
+            </HelpTip>
+          </h1>
           <p className="mt-1 text-sm text-bordeaux/50">{products.length} ürün</p>
         </div>
         <Link href="/admin/urunler/yeni" className="btn-primary !py-2.5 text-xs">

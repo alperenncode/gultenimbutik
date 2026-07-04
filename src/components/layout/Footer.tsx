@@ -135,25 +135,25 @@ export function Footer({
           </p>
         </div>
 
-        {/* Geliştirici imzası */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1
-          text-[11px] text-cream/30">
-          <span>Tasarım &amp; Geliştirme: Alperen Uçum</span>
-          <span aria-hidden="true">·</span>
+        {/* Geliştirici imzası — mobilde sol altta alt alta, geniş ekranda ortada tek satır */}
+        <div className="mt-6 flex flex-col items-start gap-1.5 text-[11px] text-cream/30
+          md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-x-2 md:gap-y-1">
+          <span>Geliştirici &amp; Tasarım: Alperen Uçum</span>
+          <span aria-hidden="true" className="hidden md:inline">·</span>
           <a
             href="https://www.instagram.com/alperenucm"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 transition-colors hover:text-rosegold"
+            className="inline-flex items-center gap-1.5 transition-colors hover:text-rosegold"
           >
             <Instagram size={11} /> alperenucm
           </a>
-          <span aria-hidden="true">·</span>
+          <span aria-hidden="true" className="hidden md:inline">·</span>
           <a
             href="https://wa.me/905388525320"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 transition-colors hover:text-rosegold"
+            className="inline-flex items-center gap-1.5 transition-colors hover:text-rosegold"
           >
             <MessageCircle size={11} /> 0538 852 53 20
           </a>

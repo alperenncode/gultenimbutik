@@ -13,6 +13,7 @@ import {
   Plus, Pencil, Trash2, Loader2, X, Save, Star,
   CheckCircle2, EyeOff, MessageSquare, Quote, Clock,
 } from "lucide-react";
+import { HelpTip } from "@/components/admin/HelpTip";
 import type { Testimonial, Review } from "@/types";
 import {
   fetchAllTestimonialsAdmin,
@@ -59,7 +60,31 @@ export default function AdminCommentsPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="font-display text-2xl text-bordeaux">Yorumlar</h1>
+        <h1 className="flex items-center gap-2 font-display text-2xl text-bordeaux">
+          Yorumlar
+          <HelpTip title="Yorum Yönetimi Nasıl Çalışır?">
+            <p>Bu sayfada iki ayrı yorum türü yönetilir:</p>
+            <p>
+              <strong>1) Ürün Yorumları:</strong> Müşterilerinizin ürün sayfalarından
+              kendi yazdığı yorumlardır. Yorum yazmak için üye olmaları gerekir;
+              isimleri sitede gizlilik için kısaltılmış görünür (ör. &ldquo;Ayşe K.&rdquo;).
+            </p>
+            <ul>
+              <li>Yeni yorumlar <strong>&ldquo;Onay Bekliyor&rdquo;</strong> olarak buraya düşer —
+                sekmedeki sayı kaç yorumun beklediğini gösterir.</li>
+              <li><strong>Onayla ve Yayınla</strong>&apos;ya dokununca yorum hem ürünün
+                sayfasında hem ana sayfadaki &ldquo;Sizden Gelenler&rdquo; bölümünde görünür.</li>
+              <li>Uygunsuz yorumu <strong>Sil</strong> ile kalıcı kaldırabilir ya da
+                yayınladığınız bir yorumu <strong>Yayından Kaldır</strong> ile gizleyebilirsiniz.</li>
+              <li>Siz onaylamadan hiçbir yorum sitede görünmez — kontrol tamamen sizde.</li>
+            </ul>
+            <p>
+              <strong>2) Vitrin Yorumları:</strong> WhatsApp/Instagram&apos;dan gelen güzel
+              geri bildirimleri sizin elle eklediğiniz yorumlardır; yalnızca ana
+              sayfadaki &ldquo;Sizden Gelenler&rdquo; bölümünde görünür.
+            </p>
+          </HelpTip>
+        </h1>
         <p className="mt-1 text-sm text-bordeaux/50">
           Ürün yorumlarını onaylayın, ana sayfa vitrin yorumlarını düzenleyin
         </p>

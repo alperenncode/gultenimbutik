@@ -98,10 +98,14 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['email', 'displayName', 'wishlist', 'createdAt'])
         && request.resource.data.email == request.auth.token.email
         && validWishlist();
+      // email yalnızca Auth'taki güncel adresle eşleşiyorsa değiştirilebilir
+      // (e-posta değiştirme özelliği profil dokümanını eşitlerken kullanır)
       allow update: if isSignedIn()
         && request.auth.uid == uid
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['wishlist', 'displayName'])
+             .hasOnly(['wishlist', 'displayName', 'email'])
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['email'])
+            || request.resource.data.email == request.auth.token.email)
         && validWishlist();
       allow delete: if isSignedIn() && request.auth.uid == uid;
     }

@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Package, FolderTree, MessageSquareQuote, Images, Plus } from "lucide-react";
+import { HelpTip } from "@/components/admin/HelpTip";
 import { fetchAllProductsAdmin } from "@/lib/firestore/products";
 import { fetchCategories } from "@/lib/firestore/categories";
 import { fetchAllTestimonialsAdmin } from "@/lib/firestore/testimonials";
@@ -44,7 +45,32 @@ export default function AdminDashboard() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl text-bordeaux">Panel</h1>
+          <h1 className="flex items-center gap-2 font-display text-2xl text-bordeaux">
+            Panel
+            <HelpTip title="Yönetim Paneli Nasıl Kullanılır?">
+              <p>
+                Burası sitenizin kontrol merkezidir. Soldaki menüden (telefonda sol
+                üstteki üç çizgiye dokunarak) tüm bölümlere ulaşırsınız:
+              </p>
+              <ul>
+                <li><strong>Ürünler:</strong> Satıştaki kıyafetleri eklersiniz, düzenlersiniz, gizlersiniz.</li>
+                <li><strong>Kategoriler:</strong> Elbise, Takım gibi grupları yönetirsiniz.</li>
+                <li><strong>Lookbook:</strong> Ana sayfadaki ilham/kombin fotoğraflarını yönetirsiniz.</li>
+                <li><strong>Yorumlar:</strong> Müşterilerin ürün yorumlarını onaylarsınız ve ana sayfa vitrin yorumlarını yazarsınız.</li>
+                <li><strong>Site Ayarları:</strong> Telefon, Instagram, adres, duyuru yazısı ve Hakkımızda metnini değiştirirsiniz.</li>
+              </ul>
+              <p>
+                <strong>Önemli:</strong> Yaptığınız her değişiklik sitede anında değil,
+                en geç 10 dakika içinde görünür. Bu normaldir — site hız için
+                sayfaları önceden hazırlar.
+              </p>
+              <p>
+                Bu sayfadaki kartlar özet gösterir; bir karta dokununca ilgili
+                bölüme gidersiniz. Her bölümde bunun gibi <strong>?</strong> işaretleri
+                var — takıldığınız yerde dokunup okuyabilirsiniz.
+              </p>
+            </HelpTip>
+          </h1>
           <p className="mt-1 text-sm text-bordeaux/50">Gültenim Butik yönetim özeti</p>
         </div>
         <Link href="/admin/urunler/yeni" className="btn-primary !py-2.5 text-xs">

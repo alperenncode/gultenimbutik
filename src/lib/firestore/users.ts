@@ -37,6 +37,11 @@ export async function fetchUserProfile(uid: string): Promise<UserProfile | null>
   };
 }
 
+/** E-posta değişikliği sonrası profil dokümanındaki adresi eşitler */
+export async function updateUserEmail(uid: string, email: string) {
+  await updateDoc(doc(db, "users", uid), { email: email.toLowerCase() });
+}
+
 /** Favorilere atomik ekleme/çıkarma — yarış koşulu (race condition) güvenli */
 export async function addToWishlist(uid: string, productId: string) {
   await updateDoc(doc(db, "users", uid), { wishlist: arrayUnion(productId) });

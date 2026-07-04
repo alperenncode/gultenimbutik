@@ -14,6 +14,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { fetchProductsByIds } from "@/lib/firestore/products";
 import type { Product } from "@/types";
 import { ProductCard } from "@/components/product/ProductCard";
+import { AccountSecurity } from "./AccountSecurity";
 
 type Tab = "favoriler" | "profil";
 
@@ -170,9 +171,11 @@ export function AccountTabs() {
                 <dd className="text-sm text-bordeaux">{wishlist.length} ürün</dd>
               </div>
             </dl>
+            <AccountSecurity />
+
             <p className="mt-8 text-xs leading-relaxed text-bordeaux/45">
-              Hesabınızla ilgili değişiklik talepleri için bize WhatsApp veya
-              Instagram üzerinden ulaşabilirsiniz.
+              Diğer talepleriniz için bize WhatsApp veya Instagram üzerinden
+              ulaşabilirsiniz.
             </p>
           </motion.div>
         )}
