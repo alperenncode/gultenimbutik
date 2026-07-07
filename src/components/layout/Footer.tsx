@@ -14,20 +14,30 @@ export function Footer({
 }) {
   const instagramUrl = instagramUrlOf(settings.instagramHandle);
   const whatsappLink = buildGeneralWhatsAppLink(settings.whatsappNumber);
+  const theme = settings.theme;
 
   return (
-    <footer className="bg-bordeaux text-cream/80">
+    <footer style={{ backgroundColor: theme.darkSectionBackground }} className="text-cream/80">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-4 lg:gap-12">
           {/* Marka */}
           <div>
-            <Image
-              src="/logo-plaka.png"
-              alt="Gültenim Boutique"
-              width={1200}
-              height={302}
-              className="mb-5 h-12 w-auto rounded-[3px]"
-            />
+            <span
+              style={
+                theme.footerLogoPlateEnabled
+                  ? { backgroundColor: theme.footerLogoPlateColor }
+                  : undefined
+              }
+              className={`mb-5 inline-flex ${theme.footerLogoPlateEnabled ? "rounded-lg px-4 py-2" : ""}`}
+            >
+              <Image
+                src="/logo-plaka.png"
+                alt="Gültenim Boutique"
+                width={1200}
+                height={302}
+                className="h-16 w-auto rounded-[3px]"
+              />
+            </span>
             <p className="text-sm leading-relaxed text-cream/60">
               Selvi Çetin ve İnvee koleksiyonlarıyla zarafeti buluşturan premium
               tesettür giyim. Siparişleriniz WhatsApp ve Instagram üzerinden

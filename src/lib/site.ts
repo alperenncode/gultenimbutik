@@ -32,7 +32,7 @@ export function formatPrice(price: number): string {
   return `${price.toLocaleString("tr-TR")} ₺`;
 }
 
-import type { SiteSettings } from "@/types";
+import type { HomeSectionConfig, HomeSectionKey, SiteSettings, SiteTheme } from "@/types";
 
 /**
  * Site ayarlarının varsayılanları — Firestore'daki settings/site dokümanı
@@ -53,7 +53,74 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     "Alışveriş deneyimimiz de kendimize has: sepet yok, karmaşık ödeme adımları yok. Beğendiğiniz ürünü WhatsApp'tan tek mesajla sorarsınız; rengi, bedeni, kombin önerisiyle birlikte size özel ilgileniriz. Çünkü bize göre alışveriş bir işlem değil, bir sohbettir.",
   ].join("\n\n"),
   aboutQuote: "Zarafet, detaylarda gizlidir.",
+  theme: {
+    pageBackground: "#F5F0EB",
+    darkSectionBackground: "#2C1A1A",
+    headingColor: "#2C1A1A",
+    accentColor: "#D4AF88",
+    accentColorDark: "#B8935F",
+    logoPlateEnabled: false,
+    logoPlateColor: "#F5F0EB",
+    footerLogoPlateEnabled: false,
+    footerLogoPlateColor: "#2C1A1A",
+  },
+  homeSections: [
+    { key: "popular", enabled: true },
+    { key: "lookbook", enabled: true },
+    { key: "categories", enabled: true },
+    { key: "new", enabled: true },
+    { key: "testimonials", enabled: true },
+  ],
 };
+
+const HOME_SECTION_KEYS: HomeSectionKey[] = [
+  "popular",
+  "lookbook",
+  "categories",
+  "new",
+  "testimonials",
+];
+
+function isHexColor(v: unknown): v is string {
+  return typeof v === "string" && /^#[0-9a-fA-F]{3,8}$/.test(v.trim());
+}
+
+function mergeTheme(data: unknown): SiteTheme {
+  const merged = { ...DEFAULT_SETTINGS.theme };
+  if (data && typeof data === "object") {
+    const d = data as Record<string, unknown>;
+    for (const key of Object.keys(merged) as (keyof SiteTheme)[]) {
+      const v = d[key];
+      if (typeof merged[key] === "boolean" && typeof v === "boolean") {
+        (merged[key] as boolean) = v;
+      } else if (typeof merged[key] === "string" && isHexColor(v)) {
+        (merged[key] as string) = v.trim();
+      }
+    }
+  }
+  return merged;
+}
+
+function mergeHomeSections(data: unknown): HomeSectionConfig[] {
+  if (!Array.isArray(data)) return DEFAULT_SETTINGS.homeSections;
+
+  const seen = new Set<HomeSectionKey>();
+  const cleaned: HomeSectionConfig[] = [];
+  for (const item of data) {
+    if (!item || typeof item !== "object") continue;
+    const key = (item as Record<string, unknown>).key;
+    const enabled = (item as Record<string, unknown>).enabled;
+    if (typeof key !== "string" || !HOME_SECTION_KEYS.includes(key as HomeSectionKey)) continue;
+    if (seen.has(key as HomeSectionKey)) continue;
+    seen.add(key as HomeSectionKey);
+    cleaned.push({ key: key as HomeSectionKey, enabled: typeof enabled === "boolean" ? enabled : true });
+  }
+  // Eksik kalan (ör. gelecekte eklenen yeni) bölümler sona, açık halde eklenir
+  for (const key of HOME_SECTION_KEYS) {
+    if (!seen.has(key)) cleaned.push({ key, enabled: true });
+  }
+  return cleaned.length > 0 ? cleaned : DEFAULT_SETTINGS.homeSections;
+}
 
 /**
  * Firestore'dan gelen ham ayar verisini varsayılanlarla birleştirir.
@@ -64,10 +131,13 @@ export function mergeSettings(data: Record<string, unknown> | undefined | null):
   const merged = { ...DEFAULT_SETTINGS };
   if (data) {
     for (const key of Object.keys(DEFAULT_SETTINGS) as (keyof SiteSettings)[]) {
+      if (key === "theme" || key === "homeSections") continue;
       const v = data[key];
       if (typeof v === "string" && v.trim() !== "") merged[key] = v;
     }
   }
+  merged.theme = mergeTheme(data?.theme);
+  merged.homeSections = mergeHomeSections(data?.homeSections);
   return merged;
 }
 

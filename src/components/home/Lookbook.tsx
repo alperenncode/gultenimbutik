@@ -9,15 +9,21 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import type { LookbookItem } from "@/types";
 import { Reveal } from "@/components/ui/Reveal";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 export function Lookbook({ items }: { items: LookbookItem[] }) {
+  const { theme } = useSiteSettings();
   if (items.length === 0) return null;
 
   return (
     <section id="lookbook" className="mx-auto max-w-7xl px-6 lg:px-8 py-20">
       <Reveal className="text-center mb-12">
-        <p className="section-subtitle">Lookbook</p>
-        <h2 className="section-title mt-3">Stil Önerileri</h2>
+        <p style={{ color: theme.accentColorDark }} className="text-xs uppercase tracking-luxe font-medium">
+          Lookbook
+        </p>
+        <h2 style={{ color: theme.headingColor }} className="mt-3 font-display text-3xl md:text-4xl lg:text-5xl">
+          Stil Önerileri
+        </h2>
         <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-bordeaux/55">
           Sezonun öne çıkan kombinleri — ilham alın, beğendiğiniz parçayı
           WhatsApp&apos;tan sorun.

@@ -17,6 +17,7 @@ import {
   MessageSquareQuote,
   Images,
   Settings,
+  Palette,
   KeyRound,
   LogOut,
   Loader2,
@@ -35,6 +36,7 @@ const NAV = [
   { href: "/admin/kategoriler", label: "Kategoriler", icon: FolderTree },
   { href: "/admin/lookbook", label: "Lookbook", icon: Images },
   { href: "/admin/yorumlar", label: "Yorumlar", icon: MessageSquareQuote },
+  { href: "/admin/gorunum", label: "Görünüm", icon: Palette },
   { href: "/admin/ayarlar", label: "Site Ayarları", icon: Settings },
 ];
 

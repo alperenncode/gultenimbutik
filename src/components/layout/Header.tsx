@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, User, Menu, Search, ChevronDown, QrCode } from "lucide-react";
 import type { Category } from "@/types";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
+import { hexToRgba } from "@/lib/color";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { MegaMenu } from "./MegaMenu";
@@ -25,6 +26,7 @@ export function Header({ categories }: { categories: Category[] }) {
   const { user } = useAuth();
   const { count } = useWishlist();
   const settings = useSiteSettings();
+  const theme = settings.theme;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -49,15 +51,21 @@ export function Header({ categories }: { categories: Category[] }) {
   return (
     <>
       {/* Üst duyuru şeridi */}
-      <div className="bg-bordeaux text-cream/90 text-center text-[11px] tracking-widest uppercase py-2 px-4">
+      <div
+        style={{ backgroundColor: theme.darkSectionBackground }}
+        className="text-cream/90 text-center text-[11px] tracking-widest uppercase py-2 px-4"
+      >
         {settings.announcement}
       </div>
 
       <header
+        style={{
+          backgroundColor: scrolled
+            ? hexToRgba(theme.pageBackground, 0.95)
+            : theme.pageBackground,
+        }}
         className={`sticky top-0 z-40 transition-all duration-300 ${
-          scrolled
-            ? "bg-cream/95 backdrop-blur-md shadow-soft"
-            : "bg-cream"
+          scrolled ? "backdrop-blur-md shadow-soft" : ""
         }`}
         onMouseLeave={() => setMegaOpen(false)}
       >
@@ -74,14 +82,23 @@ export function Header({ categories }: { categories: Category[] }) {
 
             {/* Logo */}
             <Link href="/" className="shrink-0" aria-label="Gültenim Boutique — Ana Sayfa">
-              <Image
-                src="/logo-plaka.png"
-                alt="Gültenim Boutique"
-                width={1200}
-                height={302}
-                priority
-                className="h-8 w-auto sm:h-9 md:h-10"
-              />
+              <span
+                style={
+                  theme.logoPlateEnabled
+                    ? { backgroundColor: theme.logoPlateColor }
+                    : undefined
+                }
+                className={theme.logoPlateEnabled ? "inline-flex rounded-lg px-3 py-1.5" : "inline-flex"}
+              >
+                <Image
+                  src="/logo-plaka.png"
+                  alt="Gültenim Boutique"
+                  width={1200}
+                  height={302}
+                  priority
+                  className="h-8 w-auto sm:h-9 md:h-10"
+                />
+              </span>
             </Link>
 
             {/* Masaüstü navigasyon */}

@@ -6,6 +6,7 @@
  * konsola uyarı yazılır — böylece geliştirme, Firebase kurulumundan önce başlayabilir.
  */
 import "server-only";
+import { cache } from "react";
 import type { Product, Category, Testimonial, LookbookItem, SiteSettings } from "@/types";
 import { mergeSettings, DEFAULT_SETTINGS } from "@/lib/site";
 
@@ -197,7 +198,7 @@ export async function getApprovedReviewsAsTestimonials(count = 6): Promise<Testi
  * Site ayarları — settings/site dokümanı, varsayılanlarla birleştirilir.
  * Firestore'a ulaşılamazsa site sabitleriyle çalışmaya devam eder.
  */
-export async function getSiteSettings(): Promise<SiteSettings> {
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   try {
     const db = await getDb();
     const snap = await db.collection("settings").doc("site").get();
@@ -209,7 +210,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     );
     return DEFAULT_SETTINGS;
   }
-}
+});
 
 export async function getLookbook(): Promise<LookbookItem[]> {
   return safeQuery(async () => {

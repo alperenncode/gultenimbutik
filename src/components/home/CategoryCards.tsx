@@ -6,15 +6,21 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Category } from "@/types";
 import { Reveal } from "@/components/ui/Reveal";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 export function CategoryCards({ categories }: { categories: Category[] }) {
+  const { theme } = useSiteSettings();
   if (categories.length === 0) return null;
 
   return (
     <section className="mx-auto max-w-7xl px-6 lg:px-8 py-20">
       <Reveal className="text-center mb-12">
-        <p className="section-subtitle">Kategoriler</p>
-        <h2 className="section-title mt-3">Size Özel Seçkiler</h2>
+        <p style={{ color: theme.accentColorDark }} className="text-xs uppercase tracking-luxe font-medium">
+          Kategoriler
+        </p>
+        <h2 style={{ color: theme.headingColor }} className="mt-3 font-display text-3xl md:text-4xl lg:text-5xl">
+          Size Özel Seçkiler
+        </h2>
       </Reveal>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:gap-6">

@@ -24,7 +24,7 @@ export function FloatingSocialButtons() {
   const settings = useSiteSettings();
   return (
     // Mobilde biraz küçük ve kenara yakın — içeriği olabildiğince az kapatsın
-    <div className="fixed bottom-4 right-3 sm:bottom-7 sm:right-6 z-50 mb-safe flex flex-col items-end gap-2.5 sm:gap-3">
+    <div className="fixed bottom-4 right-3 sm:bottom-7 sm:right-6 z-50 mb-safe flex flex-col items-end gap-4 sm:gap-5">
       {/* Instagram */}
       <motion.a
         custom={1.2}
@@ -47,7 +47,7 @@ export function FloatingSocialButtons() {
         >
           @{settings.instagramHandle}
         </span>
-        <span className="relative flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center">
+        <span className="relative flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center">
           {/* Nabız halkası — WhatsApp ile senkron olmasın diye gecikmeli */}
           <span
             className="absolute inset-0 rounded-full bg-[#DD2A7B] animate-pulse-ring"
@@ -57,7 +57,7 @@ export function FloatingSocialButtons() {
             className="relative flex h-full w-full items-center justify-center rounded-full
               bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white shadow-card"
           >
-            <Instagram size={22} strokeWidth={1.8} />
+            <Instagram size={25} strokeWidth={1.8} />
           </span>
         </span>
       </motion.a>
@@ -84,14 +84,14 @@ export function FloatingSocialButtons() {
         >
           Sipariş / Bilgi
         </span>
-        <span className="relative flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center">
+        <span className="relative flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center">
           {/* Nabız halkası */}
           <span className="absolute inset-0 rounded-full bg-[#25D366] animate-pulse-ring" />
           <span
             className="relative flex h-full w-full items-center justify-center rounded-full
               bg-[#25D366] text-white shadow-card"
           >
-            <MessageCircle size={24} strokeWidth={1.8} />
+            <MessageCircle size={27} strokeWidth={1.8} />
           </span>
         </span>
       </motion.a>

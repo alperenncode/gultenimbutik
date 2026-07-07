@@ -15,6 +15,7 @@ import {
   deleteCategory,
 } from "@/lib/firestore/categories";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { triggerRevalidate } from "@/lib/revalidate";
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -34,6 +35,7 @@ export default function AdminCategoriesPage() {
     try {
       await deleteCategory(cat.id);
       setCategories((prev) => prev.filter((c) => c.id !== cat.id));
+      triggerRevalidate();
     } catch (err) {
       console.error(err);
     } finally {
@@ -165,6 +167,7 @@ function CategoryModal({
       };
       if (category) await updateCategory(category.id, input);
       else await createCategory(input);
+      triggerRevalidate();
       onSaved();
     } catch (err) {
       console.error(err);

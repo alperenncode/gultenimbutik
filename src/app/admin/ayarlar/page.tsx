@@ -10,6 +10,7 @@ import { Loader2, Save, CheckCircle2 } from "lucide-react";
 import { HelpTip } from "@/components/admin/HelpTip";
 import type { SiteSettings } from "@/types";
 import { fetchSiteSettingsClient, saveSiteSettings } from "@/lib/firestore/settings";
+import { triggerRevalidate } from "@/lib/revalidate";
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
@@ -49,6 +50,7 @@ export default function AdminSettingsPage() {
     try {
       await saveSiteSettings({ ...settings, whatsappNumber: number });
       setSaved(true);
+      triggerRevalidate();
     } catch (err) {
       console.error(err);
       setError("Kaydedilemedi. Yetkinizi ve bağlantınızı kontrol edin.");

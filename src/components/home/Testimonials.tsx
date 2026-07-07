@@ -11,11 +11,13 @@ import { motion } from "framer-motion";
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Testimonial } from "@/types";
 import { Reveal } from "@/components/ui/Reveal";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 const AUTOPLAY_MS = 4500;
 const MAX_ITEMS = 12;
 
 export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+  const { theme } = useSiteSettings();
   const items = testimonials.slice(0, MAX_ITEMS);
   const [visible, setVisible] = useState(3);
   const [index, setIndex] = useState(0);
@@ -52,10 +54,10 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
   const canSlide = items.length > visible;
 
   return (
-    <section className="bg-bordeaux py-20">
+    <section style={{ backgroundColor: theme.darkSectionBackground }} className="py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <Reveal className="text-center mb-12">
-          <p className="text-xs uppercase tracking-luxe text-rosegold font-medium">
+          <p style={{ color: theme.accentColor }} className="text-xs uppercase tracking-luxe font-medium">
             Mutlu Müşterilerimiz
           </p>
           <h2 className="mt-3 font-display text-3xl md:text-4xl lg:text-5xl text-cream">
@@ -78,7 +80,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
               {items.map((t) => (
                 <div key={t.id} className="w-full shrink-0 px-2.5 sm:w-1/2 lg:w-1/3">
                   <figure className="h-full border border-cream/10 bg-bordeaux-light/40 p-7">
-                    <Quote size={28} className="text-rosegold/40" />
+                    <Quote size={28} style={{ color: theme.accentColor, opacity: 0.4 }} />
                     <blockquote className="mt-4 text-sm leading-relaxed text-cream/80 italic">
                       &ldquo;{t.quote}&rdquo;
                     </blockquote>
@@ -90,7 +92,8 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
                             <Star
                               key={s}
                               size={13}
-                              className={s < (t.rating ?? 0) ? "text-rosegold" : "text-cream/20"}
+                              style={s < (t.rating ?? 0) ? { color: theme.accentColor } : undefined}
+                              className={s < (t.rating ?? 0) ? "" : "text-cream/20"}
                               fill={s < (t.rating ?? 0) ? "currentColor" : "none"}
                             />
                           ))}
@@ -136,8 +139,9 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
                 key={i}
                 onClick={() => setIndex(i)}
                 aria-label={`${i + 1}. sayfaya git`}
+                style={i === index ? { backgroundColor: theme.accentColor } : undefined}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === index ? "w-6 bg-rosegold" : "w-1.5 bg-cream/25 hover:bg-cream/40"
+                  i === index ? "w-6" : "w-1.5 bg-cream/25 hover:bg-cream/40"
                 }`}
               />
             ))}

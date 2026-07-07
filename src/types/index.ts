@@ -86,6 +86,35 @@ export interface Review {
   createdAt: number; // millis
 }
 
+/** Ana sayfada sıralanabilir/açılıp kapatılabilir bölümler (Hero hariç — o hep sabit ilk sıradadır) */
+export type HomeSectionKey = "popular" | "lookbook" | "categories" | "new" | "testimonials";
+
+export interface HomeSectionConfig {
+  key: HomeSectionKey;
+  enabled: boolean;
+}
+
+/**
+ * Ana sayfa + header + footer + logo alanlarının renk teması.
+ * Logo görselinin kendisi (PNG) boyanmaz — yalnızca arkasındaki plaka rengi ayarlanır.
+ */
+export interface SiteTheme {
+  /** Ana sayfa bölümleri + header zemin rengi */
+  pageBackground: string;
+  /** Üst duyuru şeridi + footer + yorumlar bandı zemin rengi */
+  darkSectionBackground: string;
+  /** Ana sayfa başlıkları */
+  headingColor: string;
+  /** Koyu zeminler üzerindeki vurgu rengi (ör. Sizden Gelenler bandı) */
+  accentColor: string;
+  /** Açık zeminler üzerindeki vurgu rengi (ör. alt başlık etiketleri) */
+  accentColorDark: string;
+  logoPlateEnabled: boolean;
+  logoPlateColor: string;
+  footerLogoPlateEnabled: boolean;
+  footerLogoPlateColor: string;
+}
+
 /**
  * Site geneli ayarlar — Firestore'daki settings/site dokümanında tutulur,
  * admin panelinden düzenlenir. Boş bırakılan alanlar için lib/site.ts'teki
@@ -105,4 +134,6 @@ export interface SiteSettings {
   aboutTitle: string;
   aboutText: string;
   aboutQuote: string;
+  theme: SiteTheme;
+  homeSections: HomeSectionConfig[];
 }

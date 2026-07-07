@@ -23,6 +23,7 @@ const fadeUp = {
 
 export function Hero() {
   const settings = useSiteSettings();
+  const theme = settings.theme;
   return (
     <section className="relative overflow-hidden bg-cream">
       {/* Dekoratif zemin halkaları */}
@@ -62,7 +63,8 @@ export function Hero() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="section-subtitle"
+              style={{ color: theme.accentColorDark }}
+              className="text-xs uppercase tracking-luxe font-medium"
             >
               Yeni Sezon Koleksiyonu
             </motion.p>
@@ -72,12 +74,13 @@ export function Hero() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="mt-5 font-display text-4xl leading-[1.15] text-bordeaux
+              style={{ color: theme.headingColor }}
+              className="mt-5 font-display text-4xl leading-[1.15]
                 sm:text-5xl lg:text-6xl xl:text-[4.2rem]"
             >
               Zarafet,
               <br />
-              <span className="italic text-rosegold-dark">her detayda</span>
+              <span className="italic" style={{ color: theme.accentColorDark }}>her detayda</span>
               <br />
               sizinle.
             </motion.h1>

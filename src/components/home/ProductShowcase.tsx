@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import type { Product } from "@/types";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Reveal } from "@/components/ui/Reveal";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 export function ProductShowcase({
   subtitle,
@@ -20,14 +21,19 @@ export function ProductShowcase({
   viewAllHref: string;
   tinted?: boolean;
 }) {
+  const { theme } = useSiteSettings();
   if (products.length === 0) return null;
 
   return (
     <section className={tinted ? "bg-cream-light py-20" : "py-20"}>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <Reveal className="flex flex-col items-center text-center mb-12">
-          <p className="section-subtitle">{subtitle}</p>
-          <h2 className="section-title mt-3">{title}</h2>
+          <p style={{ color: theme.accentColorDark }} className="text-xs uppercase tracking-luxe font-medium">
+            {subtitle}
+          </p>
+          <h2 style={{ color: theme.headingColor }} className="mt-3 font-display text-3xl md:text-4xl lg:text-5xl">
+            {title}
+          </h2>
         </Reveal>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
