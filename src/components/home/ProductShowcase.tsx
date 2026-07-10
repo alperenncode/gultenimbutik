@@ -45,14 +45,9 @@ export function ProductShowcase({
         </div>
 
         <Reveal className="mt-14 text-center">
-          <Link
-            href={viewAllHref}
-            className="group inline-flex items-center gap-2 text-xs uppercase tracking-luxe
-              text-bordeaux border-b border-rosegold pb-1.5
-              transition-colors hover:text-rosegold-dark"
-          >
+          <Link href={viewAllHref} className="btn-outline group">
             Tümünü Gör
-            <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </Reveal>
       </div>

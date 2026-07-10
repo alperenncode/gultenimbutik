@@ -87,7 +87,7 @@ export interface Review {
 }
 
 /** Ana sayfada sıralanabilir/açılıp kapatılabilir bölümler (Hero hariç — o hep sabit ilk sıradadır) */
-export type HomeSectionKey = "popular" | "lookbook" | "categories" | "new" | "testimonials";
+export type HomeSectionKey = "products" | "popular" | "lookbook" | "categories" | "new" | "testimonials";
 
 export interface HomeSectionConfig {
   key: HomeSectionKey;
@@ -113,6 +113,11 @@ export interface SiteTheme {
   logoPlateColor: string;
   footerLogoPlateEnabled: boolean;
   footerLogoPlateColor: string;
+  /** Hero'daki büyük logo madalyonunun katmanlı arka planı — degrade başlangıç/orta/bitiş + halka rengi */
+  heroMedallionGradientStart: string;
+  heroMedallionGradientMid: string;
+  heroMedallionGradientEnd: string;
+  heroMedallionRingColor: string;
 }
 
 /**

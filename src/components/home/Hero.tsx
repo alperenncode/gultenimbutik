@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
+import { hexToRgba } from "@/lib/color";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -127,19 +128,25 @@ export function Hero() {
             transition={{ duration: 1, delay: 0.3, ease: [0.21, 0.65, 0.36, 1] }}
             className="relative hidden lg:flex items-center justify-center"
           >
-            <div className="relative flex aspect-square w-full max-w-md items-center
-              justify-center rounded-full bg-gradient-to-br from-rosegold-light/40
-              via-cream-dark/50 to-rosegold/25">
+            <div
+              style={{
+                background: `linear-gradient(135deg, ${hexToRgba(theme.heroMedallionGradientStart, 0.4)}, ${hexToRgba(theme.heroMedallionGradientMid, 0.5)}, ${hexToRgba(theme.heroMedallionGradientEnd, 0.25)})`,
+              }}
+              className="relative flex aspect-square w-full max-w-md items-center
+              justify-center rounded-full"
+            >
               {/* Yavaşça dönen ince halka */}
               <motion.div
                 aria-hidden="true"
-                className="absolute inset-6 rounded-full border border-rosegold/30"
+                style={{ borderColor: hexToRgba(theme.heroMedallionRingColor, 0.3) }}
+                className="absolute inset-6 rounded-full border"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 44, repeat: Infinity, ease: "linear" }}
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-14 rounded-full border border-dashed border-rosegold/20"
+                style={{ borderColor: hexToRgba(theme.heroMedallionRingColor, 0.2) }}
+                className="absolute inset-14 rounded-full border border-dashed"
               />
 
               {/* Logo — hafifçe yukarı aşağı süzülür */}
@@ -161,13 +168,15 @@ export function Hero() {
               {/* Zarif parıltı noktaları */}
               <motion.span
                 aria-hidden="true"
-                className="absolute right-10 top-12 h-2 w-2 rounded-full bg-rosegold"
+                style={{ backgroundColor: theme.accentColor }}
+                className="absolute right-10 top-12 h-2 w-2 rounded-full"
                 animate={{ opacity: [0.2, 1, 0.2] }}
                 transition={{ duration: 2.4, repeat: Infinity }}
               />
               <motion.span
                 aria-hidden="true"
-                className="absolute left-12 bottom-16 h-1.5 w-1.5 rounded-full bg-rosegold-dark"
+                style={{ backgroundColor: theme.accentColorDark }}
+                className="absolute left-12 bottom-16 h-1.5 w-1.5 rounded-full"
                 animate={{ opacity: [0.15, 0.9, 0.15] }}
                 transition={{ duration: 3.1, repeat: Infinity, delay: 0.6 }}
               />

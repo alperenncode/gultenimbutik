@@ -14,6 +14,7 @@ import { fetchSiteSettingsClient, saveSiteSettings } from "@/lib/firestore/setti
 import { triggerRevalidate } from "@/lib/revalidate";
 
 const SECTION_LABELS: Record<HomeSectionKey, string> = {
+  products: "Tüm Ürünler",
   popular: "Popüler Ürünler",
   lookbook: "Lookbook",
   categories: "Kategoriler",
@@ -259,6 +260,49 @@ export default function AdminAppearancePage() {
                 </div>
               )}
             </div>
+          </div>
+        </section>
+
+        {/* Hero Logo Madalyonu */}
+        <section>
+          <h2 className="mb-4 flex items-center gap-2 border-b border-rosegold/20 pb-2
+            text-sm font-medium uppercase tracking-wider text-bordeaux">
+            Hero Logo Madalyonu
+            <HelpTip title="Logo Madalyonu Nedir?">
+              <p>
+                Ana sayfada büyük logonun arkasındaki yuvarlak, katmanlı zemin —
+                degrade (geçişli) renk + ince halkalar. Buradan bu katmanların
+                renklerini tek tek ayarlayabilirsiniz.
+              </p>
+              <ul>
+                <li><strong>Degrade Başlangıç/Orta/Bitiş:</strong> Yuvarlağın
+                  içindeki renk geçişinin üç durağı.</li>
+                <li><strong>Halka Rengi:</strong> Yuvarlağın içindeki dönen ince
+                  çizgi ve kesikli çizginin rengi.</li>
+              </ul>
+            </HelpTip>
+          </h2>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <ColorField
+              label="Degrade Başlangıç"
+              value={theme.heroMedallionGradientStart}
+              onChange={(v) => setTheme("heroMedallionGradientStart", v)}
+            />
+            <ColorField
+              label="Degrade Orta"
+              value={theme.heroMedallionGradientMid}
+              onChange={(v) => setTheme("heroMedallionGradientMid", v)}
+            />
+            <ColorField
+              label="Degrade Bitiş"
+              value={theme.heroMedallionGradientEnd}
+              onChange={(v) => setTheme("heroMedallionGradientEnd", v)}
+            />
+            <ColorField
+              label="Halka Rengi"
+              value={theme.heroMedallionRingColor}
+              onChange={(v) => setTheme("heroMedallionRingColor", v)}
+            />
           </div>
         </section>
 

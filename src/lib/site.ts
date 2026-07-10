@@ -63,8 +63,13 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     logoPlateColor: "#F5F0EB",
     footerLogoPlateEnabled: false,
     footerLogoPlateColor: "#2C1A1A",
+    heroMedallionGradientStart: "#E5CBAD",
+    heroMedallionGradientMid: "#EDE5DC",
+    heroMedallionGradientEnd: "#D4AF88",
+    heroMedallionRingColor: "#D4AF88",
   },
   homeSections: [
+    { key: "products", enabled: true },
     { key: "popular", enabled: true },
     { key: "lookbook", enabled: true },
     { key: "categories", enabled: true },
@@ -74,6 +79,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
 };
 
 const HOME_SECTION_KEYS: HomeSectionKey[] = [
+  "products",
   "popular",
   "lookbook",
   "categories",
@@ -115,11 +121,14 @@ function mergeHomeSections(data: unknown): HomeSectionConfig[] {
     seen.add(key as HomeSectionKey);
     cleaned.push({ key: key as HomeSectionKey, enabled: typeof enabled === "boolean" ? enabled : true });
   }
-  // Eksik kalan (ör. gelecekte eklenen yeni) bölümler sona, açık halde eklenir
-  for (const key of HOME_SECTION_KEYS) {
-    if (!seen.has(key)) cleaned.push({ key, enabled: true });
-  }
-  return cleaned.length > 0 ? cleaned : DEFAULT_SETTINGS.homeSections;
+  // Eksik kalan (ör. sonradan eklenen yeni) bölümler başa, açık halde eklenir —
+  // admin panelinde fark edilsin diye; isterse ok butonlarıyla aşağı taşıyabilir
+  const missing: HomeSectionConfig[] = HOME_SECTION_KEYS.filter((key) => !seen.has(key)).map((key) => ({
+    key,
+    enabled: true,
+  }));
+  const result = [...missing, ...cleaned];
+  return result.length > 0 ? result : DEFAULT_SETTINGS.homeSections;
 }
 
 /**

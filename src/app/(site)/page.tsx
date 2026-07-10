@@ -9,6 +9,7 @@ import {
   getCategories,
   getNewProducts,
   getPopularProducts,
+  getAllActiveProducts,
   getLookbook,
   getTestimonials,
   getApprovedReviewsAsTestimonials,
@@ -19,11 +20,12 @@ import {
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [categories, newProducts, popularProducts, lookbook, testimonials, productReviews, settings] =
+  const [categories, newProducts, popularProducts, allProducts, lookbook, testimonials, productReviews, settings] =
     await Promise.all([
       getCategories(),
       getNewProducts(8),
       getPopularProducts(8),
+      getAllActiveProducts(),
       getLookbook(),
       getTestimonials(),
       getApprovedReviewsAsTestimonials(6),
@@ -37,6 +39,14 @@ export default async function HomePage() {
   // Hero hep sabit ilk sırada; kalan bölümler admin panelindeki (Görünüm)
   // sıra ve açık/kapalı ayarına göre dizilir
   const sectionsByKey: Record<HomeSectionKey, ReactNode> = {
+    products: (
+      <ProductShowcase
+        subtitle="Koleksiyon"
+        title="Tüm Ürünler"
+        products={allProducts.slice(0, 20)}
+        viewAllHref="/urunler"
+      />
+    ),
     popular: (
       <ProductShowcase
         subtitle="Çok Beğenilenler"
