@@ -167,7 +167,17 @@ export function Footer({
             Linkler altı çizili + ok ikonlu: tıklanabilir olduğu ilk bakışta anlaşılır */}
         <div className="mt-6 flex flex-col items-start gap-2 text-[11px] text-cream/40
           md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-x-3 md:gap-y-1">
-          <span>Geliştirici &amp; Tasarım: Alperen Uçum</span>
+          <span>
+            Geliştirici &amp; Tasarım:{" "}
+            <a
+              href="https://alperenucmm.web.app"
+              target="_blank"
+              rel="noopener"
+              className="underline underline-offset-2 hover:text-cream/70"
+            >
+              Alperen Uçum
+            </a>
+          </span>
           <span aria-hidden="true" className="hidden md:inline text-cream/25">·</span>
           <a
             href="https://www.instagram.com/alperenucm"
