@@ -40,16 +40,57 @@ export default function TermsPage() {
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>3. Teslimat ve İade</h2>
+        <h2 className={hCls}>3. Teslimat</h2>
         <p className={pCls}>
-          Teslimat ve iade koşulları, sipariş yazışması sırasında açıkça
-          bildirilir ve karşılıklı mutabakatla kesinleşir. Sorularınız için bize
-          WhatsApp üzerinden ulaşabilirsiniz.
+          Teslimat süresi, kargo firması ve kargo ücreti, sipariş yazışması
+          sırasında açıkça bildirilir. Sorularınız için bize WhatsApp üzerinden
+          ulaşabilirsiniz.
         </p>
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>4. Fikri Mülkiyet</h2>
+        <h2 className={hCls}>4. Mesafeli Satış ve Cayma Hakkı</h2>
+        <p className={pCls}>
+          WhatsApp veya Instagram üzerinden yazışarak verdiğiniz siparişler,
+          6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli
+          Sözleşmeler Yönetmeliği kapsamında &ldquo;mesafeli satış
+          sözleşmesi&rdquo; sayılır. Bu kapsamda tüketici olarak aşağıdaki
+          haklara sahipsiniz:
+        </p>
+        <p className={pCls}>
+          <strong className="text-bordeaux">Cayma hakkı:</strong> Ürünü teslim
+          aldığınız tarihten itibaren <strong className="text-bordeaux">14 gün
+          içinde</strong>, hiçbir gerekçe göstermeksizin ve cezai şart
+          ödemeksizin sözleşmeden cayabilir, ürünü iade edebilirsiniz. Cayma
+          hakkınızı kullanmak için bu süre içinde WhatsApp
+          ({SITE.phoneDisplay}) veya {SITE.email} adresinden bize açıkça
+          bildirmeniz yeterlidir; aşağıdaki örnek metni kullanabilirsiniz.
+        </p>
+        <div className="border border-bordeaux/15 bg-white px-5 py-4 text-sm text-bordeaux/70 mb-3">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-bordeaux/50">
+            Örnek Cayma Bildirimi
+          </p>
+          <p className="italic">
+            &ldquo;[Sipariş tarihi] tarihinde teslim aldığım [ürün adı] ürünü
+            için cayma hakkımı kullanıyorum. Ad Soyad: [___] Sipariş No / Tarih:
+            [___] İade IBAN (varsa): [___]&rdquo;
+          </p>
+        </div>
+        <p className={pCls}>
+          Cayma bildiriminiz bize ulaştıktan sonra ürünü, etiketleri sökülmemiş
+          ve kullanılmamış (denenmiş olması iadeye engel değildir) şekilde 10
+          gün içinde tarafımıza göndermeniz gerekir. Ürün bedeli, iade edilen
+          ürünün bize ulaşmasından itibaren <strong className="text-bordeaux">
+          14 gün içinde</strong>, ödemeyi yaptığınız yöntemle iade edilir.
+          Kişiye özel ölçüyle diktirilen veya isteğiniz üzerine sonradan
+          değiştirilen (örn. boy kısaltma) ürünlerde cayma hakkı, Mesafeli
+          Sözleşmeler Yönetmeliği m.15 uyarınca kullanılamayabilir; bu durum
+          sipariş sırasında ayrıca belirtilir.
+        </p>
+      </section>
+
+      <section className={sectionCls}>
+        <h2 className={hCls}>5. Fikri Mülkiyet</h2>
         <p className={pCls}>
           Sitedeki tüm görseller, metinler ve marka unsurları {SITE.name}&apos;e
           veya ilgili marka sahiplerine aittir; yazılı izin olmaksızın
@@ -58,7 +99,7 @@ export default function TermsPage() {
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>5. Üyelik</h2>
+        <h2 className={hCls}>6. Üyelik</h2>
         <p className={pCls}>
           Üyelik yalnızca favori listesi özelliği içindir ve ücretsizdir. Yanlış
           bilgi verilmesi veya kötüye kullanım hâlinde Butik, üyeliği askıya alma

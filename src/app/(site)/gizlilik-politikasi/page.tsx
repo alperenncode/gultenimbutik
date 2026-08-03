@@ -40,6 +40,13 @@ export default function PrivacyPage() {
           satılmaz. WhatsApp veya Instagram üzerinden ilettiğiniz bilgiler, ilgili
           platformların kendi gizlilik politikalarına tabidir.
         </p>
+        <p className={pCls}>
+          Üye olarak bir ürüne yorum yazarsanız, adınız kısmen maskelenmiş
+          olarak (ör. &ldquo;Ayşe K.&rdquo;) yorumunuzla birlikte sitede
+          yayınlanır; yorumlar yayınlanmadan önce tarafımızca onaylanır. Ayrıca
+          site trafiğini ölçmek için anonim, kişiyle ilişkilendirilmeyen bir
+          ziyaretçi sayacı tutulur (bkz. Çerez Politikası).
+        </p>
       </section>
 
       <section className={sectionCls}>
@@ -63,7 +70,19 @@ export default function PrivacyPage() {
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>5. KVKK Kapsamındaki Haklarınız</h2>
+        <h2 className={hCls}>5. Çerezler</h2>
+        <p className={pCls}>
+          Sitede kullanılan çerez ve benzer teknolojilerin (oturum deposu,
+          cihaz içi veritabanı vb.) tam listesi, amacı ve saklama süresi için{" "}
+          <a href="/cerez-politikasi" className="underline underline-offset-2 text-rosegold-dark">
+            Çerez Politikası
+          </a>{" "}
+          sayfamızı inceleyebilirsiniz.
+        </p>
+      </section>
+
+      <section className={sectionCls}>
+        <h2 className={hCls}>6. KVKK Kapsamındaki Haklarınız</h2>
         <p className={pCls}>
           KVKK m.11 uyarınca; verilerinizin işlenip işlenmediğini öğrenme,
           düzeltilmesini veya silinmesini isteme, işlemeye itiraz etme ve zarara

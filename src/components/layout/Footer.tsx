@@ -110,6 +110,11 @@ export function Footer({
                   </Link>
                 </li>
                 <li>
+                  <Link href="/cerez-politikasi" className="text-cream/60 transition-colors hover:text-rosegold">
+                    Çerez Politikası
+                  </Link>
+                </li>
+                <li>
                   <Link href="/hakkimizda" className="text-cream/60 transition-colors hover:text-rosegold">
                     Hakkımızda
                   </Link>

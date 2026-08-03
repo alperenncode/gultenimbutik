@@ -37,12 +37,17 @@ export function AuthForm({ mode }: { mode: "giris" | "kayit" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!isLogin && !consent) {
+      setError("Devam etmek için Kullanım Koşulları ve Gizlilik Politikası'nı onaylamanız gerekiyor.");
+      return;
+    }
     setBusy(true);
     try {
       if (isLogin) {
@@ -130,6 +135,27 @@ export function AuthForm({ mode }: { mode: "giris" | "kayit" }) {
             </div>
           </div>
 
+          {!isLogin && (
+            <label className="flex items-start gap-2.5 text-xs leading-relaxed text-bordeaux/60">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0"
+              />
+              <span>
+                <Link href="/kullanim-kosullari" className="underline underline-offset-2 text-rosegold-dark">
+                  Kullanım Koşulları
+                </Link>
+                {" "}ve{" "}
+                <Link href="/gizlilik-politikasi" className="underline underline-offset-2 text-rosegold-dark">
+                  Gizlilik Politikası ve KVKK Aydınlatma Metni
+                </Link>
+                &apos;ni okudum, kabul ediyorum.
+              </span>
+            </label>
+          )}
+
           {error && (
             <motion.p
               initial={{ opacity: 0, y: -6 }}
@@ -141,7 +167,11 @@ export function AuthForm({ mode }: { mode: "giris" | "kayit" }) {
             </motion.p>
           )}
 
-          <button type="submit" disabled={busy} className="btn-primary w-full disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={busy || (!isLogin && !consent)}
+            className="btn-primary w-full disabled:opacity-60"
+          >
             {busy ? (
               <>
                 <Loader2 size={16} className="animate-spin" /> Lütfen bekleyin…
@@ -165,19 +195,6 @@ export function AuthForm({ mode }: { mode: "giris" | "kayit" }) {
           </Link>
         </p>
 
-        {!isLogin && (
-          <p className="mt-4 text-center text-xs leading-relaxed text-bordeaux/40">
-            Üye olarak{" "}
-            <Link href="/kullanim-kosullari" className="underline underline-offset-2">
-              Kullanım Koşulları
-            </Link>{" "}
-            ve{" "}
-            <Link href="/gizlilik-politikasi" className="underline underline-offset-2">
-              Gizlilik Politikası
-            </Link>
-            &apos;nı kabul etmiş olursunuz.
-          </p>
-        )}
       </motion.div>
     </div>
   );
