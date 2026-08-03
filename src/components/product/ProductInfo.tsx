@@ -6,14 +6,16 @@
  * Seçilen renk/beden WhatsApp mesajına otomatik eklenir.
  */
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { Heart, MessageCircle, Instagram, ChevronDown, Check, Share2 } from "lucide-react";
+import { Heart, MessageCircle, Instagram, ChevronDown, Check, Images } from "lucide-react";
 import { formatPrice } from "@/lib/site";
 import { buildProductOrderLink } from "@/lib/whatsapp";
 import type { Product } from "@/types";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { SizeChart } from "./SizeChart";
+import { ColorOptionsModal } from "./ColorOptionsModal";
 
 function Accordion({ title, children, defaultOpen = false }: {
   title: string;
@@ -53,6 +55,17 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
   const [color, setColor] = useState<string | undefined>();
   const [size, setSize] = useState<string | undefined>();
   const [shared, setShared] = useState(false);
+  const [colorModalOpen, setColorModalOpen] = useState(false);
+  const [zoomIndex, setZoomIndex] = useState<number | null>(null);
+  const colorImages = product.colorImages ?? {};
+  const outOfStockColors = product.outOfStockColors ?? [];
+  const outOfStockSizes = product.outOfStockSizes ?? [];
+  const colorOptions = product.colors.map((c) => ({
+    name: c,
+    imageUrl: colorImages[c] ?? "",
+    outOfStock: outOfStockColors.includes(c),
+  }));
+  const hasColorPhotos = colorOptions.some((c) => c.imageUrl);
   const { isInWishlist, toggle } = useWishlist();
   const inWishlist = isInWishlist(product.id);
   const settings = useSiteSettings();
@@ -112,26 +125,84 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
       <div className="my-6 h-px bg-gradient-to-r from-rosegold/50 to-transparent" />
 
       {/* Renk seçimi */}
-      {product.colors.length > 0 && (
+      {colorOptions.length > 0 && (
         <div className="mb-6">
-          <p className="input-label">
-            Renk {color && <span className="text-rosegold-dark normal-case">— {color}</span>}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {product.colors.map((c) => (
+          <div className="mb-1.5 flex items-center justify-between">
+            <p className="input-label mb-0">
+              Renk {color && <span className="text-rosegold-dark normal-case">— {color}</span>}
+            </p>
+            {hasColorPhotos && (
               <button
-                key={c}
-                onClick={() => setColor(color === c ? undefined : c)}
-                className={`border px-4 py-2 text-sm transition-all duration-200 ${
-                  color === c
-                    ? "border-bordeaux bg-bordeaux text-cream"
-                    : "border-bordeaux/20 text-bordeaux/75 hover:border-rosegold-dark"
-                }`}
+                type="button"
+                onClick={() => setColorModalOpen(true)}
+                className="flex items-center gap-1 text-xs text-rosegold-dark underline underline-offset-2"
               >
-                {c}
+                <Images size={13} /> Tüm Renkleri Gör
               </button>
-            ))}
+            )}
           </div>
+          <div className="flex flex-wrap gap-2">
+            {colorOptions.map((c) =>
+              c.imageUrl ? (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => !c.outOfStock && setColor(color === c.name ? undefined : c.name)}
+                  disabled={c.outOfStock}
+                  title={c.outOfStock ? `${c.name} — tükendi` : c.name}
+                  className={`relative h-16 w-12 shrink-0 overflow-hidden transition-all duration-200 ${
+                    c.outOfStock ? "cursor-not-allowed" : ""
+                  } ${
+                    color === c.name
+                      ? "ring-2 ring-bordeaux ring-offset-2 ring-offset-cream"
+                      : "opacity-90 hover:opacity-100"
+                  }`}
+                >
+                  <Image src={c.imageUrl} alt={c.name} fill sizes="48px" className={`object-cover ${c.outOfStock ? "opacity-45" : ""}`} />
+                  {c.outOfStock && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(to top right, transparent calc(50% - 1px), rgba(44,26,26,0.75) 50%, transparent calc(50% + 1px))",
+                      }}
+                    />
+                  )}
+                </button>
+              ) : (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => !c.outOfStock && setColor(color === c.name ? undefined : c.name)}
+                  disabled={c.outOfStock}
+                  className={`border px-4 py-2 text-sm transition-all duration-200 ${
+                    c.outOfStock
+                      ? "cursor-not-allowed border-bordeaux/10 text-bordeaux/35 line-through"
+                      : color === c.name
+                        ? "border-bordeaux bg-bordeaux text-cream"
+                        : "border-bordeaux/20 text-bordeaux/75 hover:border-rosegold-dark"
+                  }`}
+                >
+                  {c.name}
+                </button>
+              )
+            )}
+          </div>
+
+          {colorModalOpen && (
+            <ColorOptionsModal
+              colors={colorOptions.filter((c) => c.imageUrl)}
+              onSelect={(name) => {
+                setColor(name);
+                setColorModalOpen(false);
+              }}
+              onClose={() => setColorModalOpen(false)}
+              zoomIndex={zoomIndex}
+              onZoom={setZoomIndex}
+              onCloseZoom={() => setZoomIndex(null)}
+            />
+          )}
         </div>
       )}
 
@@ -145,19 +216,27 @@ export function ProductInfo({ product, productUrl }: { product: Product; product
             <SizeChart />
           </div>
           <div className="flex flex-wrap gap-2">
-            {product.sizes.map((s) => (
-              <button
-                key={s}
-                onClick={() => setSize(size === s ? undefined : s)}
-                className={`min-w-[52px] border px-3 py-2 text-sm transition-all duration-200 ${
-                  size === s
-                    ? "border-bordeaux bg-bordeaux text-cream"
-                    : "border-bordeaux/20 text-bordeaux/75 hover:border-rosegold-dark"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
+            {product.sizes.map((s) => {
+              const outOfStock = outOfStockSizes.includes(s);
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => !outOfStock && setSize(size === s ? undefined : s)}
+                  disabled={outOfStock}
+                  title={outOfStock ? `${s} — tükendi` : undefined}
+                  className={`min-w-[52px] border px-3 py-2 text-sm transition-all duration-200 ${
+                    outOfStock
+                      ? "cursor-not-allowed border-bordeaux/10 text-bordeaux/35 line-through"
+                      : size === s
+                        ? "border-bordeaux bg-bordeaux text-cream"
+                        : "border-bordeaux/20 text-bordeaux/75 hover:border-rosegold-dark"
+                  }`}
+                >
+                  {s}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

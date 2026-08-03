@@ -27,6 +27,12 @@ export interface Product {
   oldPrice?: number;
   colors: string[];
   sizes: string[];
+  /** Renk adı -> o rengin fotoğrafı. Fotoğrafı olmayan renkler düz metin buton olarak gösterilir. */
+  colorImages?: Record<string, string>;
+  /** Stokta olmayan renk adları — sitede çapraz çizgili ve seçilemez gösterilir */
+  outOfStockColors?: string[];
+  /** Stokta olmayan beden adları — sitede çapraz çizgili ve seçilemez gösterilir */
+  outOfStockSizes?: string[];
   /** Storage indirme URL'leri, sıralı — ilk görsel kart küçük resmidir */
   images: string[];
   description: string;

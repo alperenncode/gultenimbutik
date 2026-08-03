@@ -6,13 +6,15 @@
  * Renk ve bedenler virgülle ayrılarak girilir.
  */
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Camera, X } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { slugify } from "@/lib/utils";
 import type { Category, Product } from "@/types";
 import { fetchCategories } from "@/lib/firestore/categories";
 import { createProduct, updateProduct, type ProductInput } from "@/lib/firestore/products";
+import { uploadImage, deleteImageByUrl } from "@/lib/storage";
 import { ImageUploader } from "./ImageUploader";
 import { HelpTip } from "./HelpTip";
 
@@ -20,6 +22,91 @@ const DEFAULT_SIZES = "36, 38, 40, 42, 44";
 
 function parseList(s: string): string[] {
   return s.split(",").map((x) => x.trim()).filter(Boolean);
+}
+
+/** Tek bir renge ait fotoğraf yükleme kutusu + tükendi anahtarı */
+function ColorVariantRow({
+  name,
+  imageUrl,
+  outOfStock,
+  folder,
+  onImageChange,
+  onStockChange,
+}: {
+  name: string;
+  imageUrl?: string;
+  outOfStock: boolean;
+  folder: string;
+  onImageChange: (url: string | undefined) => void;
+  onStockChange: (outOfStock: boolean) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  async function handleFile(file: File) {
+    setBusy(true);
+    try {
+      const url = await uploadImage(file, folder);
+      onImageChange(url);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleRemove() {
+    if (imageUrl) deleteImageByUrl(imageUrl).catch(() => {});
+    onImageChange(undefined);
+  }
+
+  return (
+    <div className="flex items-center gap-3 border border-bordeaux/10 bg-white px-3 py-2.5">
+      <div className="relative h-14 w-11 shrink-0 overflow-hidden bg-cream-dark">
+        {imageUrl ? (
+          <Image src={imageUrl} alt={name} fill sizes="44px" className="object-cover" />
+        ) : (
+          <label className="flex h-full w-full cursor-pointer items-center justify-center text-bordeaux/30 hover:text-rosegold-dark">
+            {busy ? (
+              <Loader2 size={15} className="animate-spin" />
+            ) : (
+              <Camera size={15} />
+            )}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              hidden
+              disabled={busy}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFile(file);
+                e.target.value = "";
+              }}
+            />
+          </label>
+        )}
+        {imageUrl && (
+          <button
+            type="button"
+            onClick={handleRemove}
+            className="absolute right-0 top-0 bg-bordeaux/70 p-0.5 text-cream"
+            aria-label={`${name} fotoğrafını kaldır`}
+          >
+            <X size={10} />
+          </button>
+        )}
+      </div>
+      <span className="flex-1 truncate text-sm text-bordeaux">{name}</span>
+      <label className="flex shrink-0 cursor-pointer items-center gap-1.5 text-xs text-bordeaux/60">
+        <input
+          type="checkbox"
+          checked={outOfStock}
+          onChange={(e) => onStockChange(e.target.checked)}
+          className="h-4 w-4"
+        />
+        Tükendi
+      </label>
+    </div>
+  );
 }
 
 export function ProductForm({ product }: { product?: Product }) {
@@ -36,6 +123,9 @@ export function ProductForm({ product }: { product?: Product }) {
   const [oldPrice, setOldPrice] = useState(product?.oldPrice ? String(product.oldPrice) : "");
   const [colors, setColors] = useState(product?.colors.join(", ") ?? "");
   const [sizes, setSizes] = useState(product?.sizes.join(", ") ?? DEFAULT_SIZES);
+  const [colorImages, setColorImages] = useState<Record<string, string>>(product?.colorImages ?? {});
+  const [outOfStockColors, setOutOfStockColors] = useState<string[]>(product?.outOfStockColors ?? []);
+  const [outOfStockSizes, setOutOfStockSizes] = useState<string[]>(product?.outOfStockSizes ?? []);
   const [images, setImages] = useState<string[]>(product?.images ?? []);
   const [description, setDescription] = useState(product?.description ?? "");
   const [fabricCare, setFabricCare] = useState(product?.fabricCare ?? "");
@@ -65,6 +155,15 @@ export function ProductForm({ product }: { product?: Product }) {
     if (!price || Number(price) <= 0) return setError("Geçerli bir fiyat girin.");
     if (images.length === 0) return setError("En az bir görsel yükleyin.");
 
+    const colorNames = parseList(colors);
+    const sizeNames = parseList(sizes);
+    // Metinden silinen renk/beden adlarına ait fotoğraf/stok kaydı yetim kalmasın diye temizlenir
+    const cleanedColorImages = Object.fromEntries(
+      Object.entries(colorImages).filter(([n]) => colorNames.includes(n))
+    );
+    const cleanedOutOfStockColors = outOfStockColors.filter((n) => colorNames.includes(n));
+    const cleanedOutOfStockSizes = outOfStockSizes.filter((n) => sizeNames.includes(n));
+
     const input: ProductInput = {
       name: name.trim(),
       slug: slug || slugify(name),
@@ -75,8 +174,11 @@ export function ProductForm({ product }: { product?: Product }) {
       ...(oldPrice && Number(oldPrice) > 0
         ? { oldPrice: Math.round(Number(oldPrice)) }
         : {}),
-      colors: parseList(colors),
-      sizes: parseList(sizes),
+      colors: colorNames,
+      sizes: sizeNames,
+      colorImages: cleanedColorImages,
+      outOfStockColors: cleanedOutOfStockColors,
+      outOfStockSizes: cleanedOutOfStockSizes,
       images,
       description: description.trim(),
       ...(fabricCare.trim() ? { fabricCare: fabricCare.trim() } : {}),
@@ -266,6 +368,85 @@ export function ProductForm({ product }: { product?: Product }) {
           />
         </div>
       </div>
+
+      {parseList(colors).length > 0 && (
+        <div>
+          <label className="input-label flex items-center gap-1.5">
+            Renk Fotoğrafları ve Stok Durumu
+            <HelpTip title="Renk Fotoğrafı ve Tükendi İşareti Ne İşe Yarar?">
+              <p>
+                Her renge (isterseniz) o rengin gerçek bir fotoğrafını
+                ekleyebilirsiniz — eklerseniz ürün sayfasında müşteri düz yazı
+                yerine küçük bir fotoğraf görür. Fotoğraf eklemezseniz o renk
+                bugünkü gibi düz yazı buton olarak görünmeye devam eder, sorun
+                olmaz.
+              </p>
+              <p>
+                <strong>Tükendi</strong> işaretlerseniz o renk sitede üzeri
+                çizili ve tıklanamaz gösterilir — ürünü silmeden sadece o rengin
+                tükendiğini belirtmiş olursunuz.
+              </p>
+            </HelpTip>
+          </label>
+          <div className="space-y-2">
+            {parseList(colors).map((c) => (
+              <ColorVariantRow
+                key={c}
+                name={c}
+                imageUrl={colorImages[c]}
+                outOfStock={outOfStockColors.includes(c)}
+                folder={`products/${product?.id ?? "yeni"}/renkler`}
+                onImageChange={(url) =>
+                  setColorImages((prev) => {
+                    const next = { ...prev };
+                    if (url) next[c] = url;
+                    else delete next[c];
+                    return next;
+                  })
+                }
+                onStockChange={(outOfStock) =>
+                  setOutOfStockColors((prev) =>
+                    outOfStock ? [...prev.filter((n) => n !== c), c] : prev.filter((n) => n !== c)
+                  )
+                }
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {parseList(sizes).length > 0 && (
+        <div>
+          <label className="input-label">Beden Stok Durumu</label>
+          <div className="flex flex-wrap gap-2">
+            {parseList(sizes).map((s) => {
+              const outOfStock = outOfStockSizes.includes(s);
+              return (
+                <label
+                  key={s}
+                  className="flex cursor-pointer items-center gap-1.5 border border-bordeaux/10
+                    bg-white px-3 py-1.5 text-sm text-bordeaux"
+                >
+                  <input
+                    type="checkbox"
+                    checked={outOfStock}
+                    onChange={(e) =>
+                      setOutOfStockSizes((prev) =>
+                        e.target.checked
+                          ? [...prev.filter((n) => n !== s), s]
+                          : prev.filter((n) => n !== s)
+                      )
+                    }
+                    className="h-4 w-4"
+                  />
+                  <span className={outOfStock ? "text-bordeaux/40 line-through" : ""}>{s}</span>
+                  {outOfStock && <span className="text-[10px] uppercase text-bordeaux/40">Tükendi</span>}
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div>
         <label className="input-label flex items-center gap-1.5">
