@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Phone, Mail, MapPin, MessageCircle, ExternalLink } from "lucide-react";
+import { Instagram, Phone, Mail, MapPin, MessageCircle, ExternalLink, AtSign } from "lucide-react";
 import { SITE, DEFAULT_SETTINGS, instagramUrlOf } from "@/lib/site";
 import { buildGeneralWhatsAppLink } from "@/lib/whatsapp";
 import type { Category, SiteSettings } from "@/types";
@@ -168,6 +168,16 @@ export function Footer({
           </p>
         </div>
 
+        <p className="mt-4 text-center text-[11px] leading-relaxed text-cream/35 md:text-xs">
+          Sipariş, teslimat ve iade süreçleri tamamen WhatsApp destek hattımız
+          üzerinden onaylanarak yürütülür. (İade süresi kullanılmamış ürünler
+          için 14 gündür — detaylar için{" "}
+          <Link href="/kullanim-kosullari" className="underline underline-offset-2 hover:text-cream/60">
+            Kullanım Koşulları
+          </Link>
+          .)
+        </p>
+
         {/* Geliştirici imzası — mobilde sol altta alt alta, geniş ekranda ortada tek satır.
             Linkler altı çizili + ok ikonlu: tıklanabilir olduğu ilk bakışta anlaşılır */}
         <div className="mt-6 flex flex-col items-start gap-2 text-[11px] text-cream/40
@@ -206,6 +216,15 @@ export function Footer({
           >
             <MessageCircle size={12} /> WhatsApp: 0538 852 53 20
             <ExternalLink size={10} className="opacity-70" />
+          </a>
+          <span aria-hidden="true" className="hidden md:inline text-cream/25">·</span>
+          <a
+            href="mailto:alperenucm@gmail.com"
+            className="inline-flex items-center gap-1.5 text-rosegold/80 underline
+              decoration-rosegold/40 underline-offset-4 transition-colors
+              hover:text-rosegold hover:decoration-rosegold"
+          >
+            <AtSign size={12} /> alperenucm@gmail.com
           </a>
         </div>
       </div>

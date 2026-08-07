@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Providers } from "@/context/Providers";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { LegalConsentBar } from "@/components/layout/LegalConsentBar";
 import { FloatingSocialButtons } from "@/components/layout/FloatingSocialButtons";
 import { VisitTracker } from "@/components/ui/VisitTracker";
 import { getCategories, getSiteSettings } from "@/lib/data";
@@ -20,6 +21,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
   return (
     <Providers settings={settings}>
       <Header categories={categories} />
+      <LegalConsentBar />
       <main className="min-h-[60vh]">{children}</main>
       <Footer categories={categories} settings={settings} />
       <FloatingSocialButtons />
