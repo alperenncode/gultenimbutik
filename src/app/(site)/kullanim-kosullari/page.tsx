@@ -29,7 +29,22 @@ export default function TermsPage() {
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>2. Fiyatlar ve Stok</h2>
+        <h2 className={hCls}>2. Hizmet Sağlayıcı Bilgileri</h2>
+        <p className={pCls}>
+          6563 sayılı Elektronik Ticaretin Düzenlenmesi Hakkında Kanun uyarınca:
+        </p>
+        <ul className="list-disc pl-5 text-sm leading-relaxed text-bordeaux/65 mb-3 space-y-1">
+          <li>Ünvan: Gültenim Boutique</li>
+          <li>Adres: {SITE.address}</li>
+          <li>Vergi Dairesi: Kazım Karabekir Vergi Dairesi</li>
+          <li>Vergi Numarası: 2250484900</li>
+          <li>E-posta: {SITE.email}</li>
+          <li>Telefon: {SITE.phoneDisplay}</li>
+        </ul>
+      </section>
+
+      <section className={sectionCls}>
+        <h2 className={hCls}>3. Fiyatlar ve Stok</h2>
         <p className={pCls}>
           Sitede gösterilen fiyatlar bilgilendirme amaçlıdır ve Türk Lirası
           cinsindendir. Fiyatlar ve stok durumu önceden bildirilmeksizin
@@ -40,7 +55,7 @@ export default function TermsPage() {
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>3. Teslimat</h2>
+        <h2 className={hCls}>4. Teslimat</h2>
         <p className={pCls}>
           Teslimat süresi, kargo firması ve kargo ücreti, sipariş yazışması
           sırasında açıkça bildirilir. Sorularınız için bize WhatsApp üzerinden
@@ -49,7 +64,7 @@ export default function TermsPage() {
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>4. Mesafeli Satış ve Cayma Hakkı</h2>
+        <h2 className={hCls}>5. Mesafeli Satış ve Cayma Hakkı</h2>
         <p className={pCls}>
           WhatsApp veya Instagram üzerinden yazışarak verdiğiniz siparişler,
           6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli
@@ -90,7 +105,7 @@ export default function TermsPage() {
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>5. Fikri Mülkiyet</h2>
+        <h2 className={hCls}>6. Fikri Mülkiyet</h2>
         <p className={pCls}>
           Sitedeki tüm görseller, metinler ve marka unsurları {SITE.name}&apos;e
           veya ilgili marka sahiplerine aittir; yazılı izin olmaksızın
@@ -99,7 +114,7 @@ export default function TermsPage() {
       </section>
 
       <section className={sectionCls}>
-        <h2 className={hCls}>6. Üyelik</h2>
+        <h2 className={hCls}>7. Üyelik</h2>
         <p className={pCls}>
           Üyelik yalnızca favori listesi özelliği içindir ve ücretsizdir. Yanlış
           bilgi verilmesi veya kötüye kullanım hâlinde Butik, üyeliği askıya alma

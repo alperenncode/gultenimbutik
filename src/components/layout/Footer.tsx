@@ -168,6 +168,13 @@ export function Footer({
           </p>
         </div>
 
+        {/* Hizmet sağlayıcı bilgileri — 6563 sayılı Elektronik Ticaretin Düzenlenmesi
+            Hakkında Kanun uyarınca zorunlu künye bilgileri */}
+        <p className="mt-3 text-center text-[11px] leading-relaxed text-cream/35 md:text-xs">
+          Gültenim Boutique — {SITE.address} — Vergi Dairesi: Kazım Karabekir
+          Vergi Dairesi — Vergi No: 2250484900
+        </p>
+
         <p className="mt-4 text-center text-[11px] leading-relaxed text-cream/35 md:text-xs">
           Sipariş, teslimat ve iade süreçleri tamamen WhatsApp destek hattımız
           üzerinden onaylanarak yürütülür. (İade süresi kullanılmamış ürünler
